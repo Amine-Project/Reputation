@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context="com.diai.reputation.PhoneLogin">
+
+    <ImageView
+        android:layout_width="173dp"
+        android:layout_height="96dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/textView2Phone"
+        android:layout_width="288dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="99dp"
+        android:background="@color/common_google_signin_btn_text_dark_disabled"
+        android:padding="10dp"
+        android:text="Provide Phone number with Country code"
+        android:textColor="#000" />
+
+    <EditText
+        android:id="@+id/Phonenoedittext"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textView2Phone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        android:background="@drawable/edittext_bck"
+        android:ems="10"
+        android:hint="Phone number"
+        android:inputType="phone"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/PhoneVerify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/Phonenoedittext"
+        android:layout_alignLeft="@+id/Phonenoedittext"
+        android:layout_alignRight="@+id/Phonenoedittext"
+        android:layout_alignStart="@+id/Phonenoedittext"
+        android:layout_below="@+id/Phonenoedittext"
+        android:layout_marginTop="49dp"
+        android:background="@drawable/layout_back"
+        android:text="Send SMS" />
+
+    <ImageView
+        android:id="@+id/imageView2Phone"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/Phonenoedittext"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@+id/textView2Phone"
+        android:layout_toStartOf="@+id/textView2Phone"
+        app:srcCompat="@drawable/ic_phone_iphone_black_24dp"
+        tools:ignore="VectorDrawableCompat" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textViewVerified"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="99dp"
+                android:background="@color/aqua1"
+                android:padding="10dp"
+                android:text="Enter the verification code below to verify"
+                android:textColor="#000"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/OTPeditText"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@+id/textViewVerified"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="41dp"
+                android:background="@drawable/edittext_bck"
+                android:ems="10"
+                android:hint="Verification code"
+                android:inputType="phone"
+                android:padding="10dp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/OTPVERIFY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/OTPeditText"
+                android:layout_alignLeft="@+id/OTPeditText"
+                android:layout_alignRight="@+id/OTPeditText"
+                android:layout_alignStart="@+id/OTPeditText"
+                android:layout_below="@+id/OTPeditText"
+                android:layout_marginTop="49dp"
+                android:background="@drawable/layout_back"
+                android:text="Verify"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </FrameLayout>
+</RelativeLayout>

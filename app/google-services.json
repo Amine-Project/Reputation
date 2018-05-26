@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "764242699318",
+    "firebase_url": "https://reputation-8bc29.firebaseio.com",
+    "project_id": "reputation-8bc29",
+    "storage_bucket": "reputation-8bc29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764242699318:android:ff71ae556f380f70",
+        "android_client_info": {
+          "package_name": "com.diai.reputation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764242699318-skgpk8grjsjehmc310tgsitsoroe8d6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diai.reputation",
+            "certificate_hash": "d6890f5df94bf5731d4ae666dec12b4016bc50b7"
+          }
+        },
+        {
+          "client_id": "764242699318-qcrirc430fqsukkhbdv0are4tq9qafnk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diai.reputation",
+            "certificate_hash": "d92c49da49c5b191c542558641850ddaecea2b79"
+          }
+        },
+        {
+          "client_id": "764242699318-an5mbp8qhp37tmr906ca4o09ga44ngla.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu6Bcc84v0LY5gqQd8_eyPFhcR4LOTBNg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764242699318-an5mbp8qhp37tmr906ca4o09ga44ngla.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
