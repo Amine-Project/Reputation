@@ -22,9 +22,9 @@ public class Registration extends AppCompatActivity implements User.OnFragmentIn
         final ViewPager viewPager= (ViewPager)findViewById(R.id.pager);
         final PagerAdapter adapter= new PagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+/*        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -40,7 +40,7 @@ public class Registration extends AppCompatActivity implements User.OnFragmentIn
 
             }
         });
-
+*/
 
     }
 
