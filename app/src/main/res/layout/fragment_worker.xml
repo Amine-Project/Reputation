@@ -31,28 +31,28 @@
     </FrameLayout>
 
     <EditText
-        android:id="@+id/workerName"
+        android:id="@+id/fname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Name" />
+        android:hint="First Name"
+        android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/workerSName"
+        android:id="@+id/lname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="S.Name" />
+        android:hint="Last Name"
+        android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/workerService"
+        android:id="@+id/service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Service" />
+        android:hint="Service"
+        android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/next"

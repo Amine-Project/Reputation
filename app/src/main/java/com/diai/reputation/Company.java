@@ -17,7 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.diai.reputation.Model.Entreprise;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -36,6 +43,10 @@ public class Company extends Fragment {
     Uri imageUri;
     ImageView companyLogo;
     Intent crop;
+    private DatabaseReference mDatabase;
+    FirebaseUser currentFirebaseUser;
+    private EditText companyName;
+    private EditText service;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -89,6 +100,9 @@ public class Company extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        companyName = (EditText)getView().findViewById(R.id.cname);
+        service = (EditText)getView().findViewById(R.id.service);
+
         companyLogo=(ImageView)getView().findViewById(R.id.companyLogo);
 
         Bitmap bit= BitmapFactory.decodeResource(getResources(),R.drawable.images);
@@ -107,8 +121,17 @@ public class Company extends Fragment {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+
+                Entreprise entreprise = new Entreprise(companyName.getText().toString(),service.getText().toString() );
+                String userId = currentFirebaseUser.getUid();
+                mDatabase.child("companies").child(userId).setValue(entreprise);
+
                 Intent home=new Intent(getContext(),Home.class);
                 startActivity(home);
+                onDestroy();
+
             }
         });
 

@@ -17,8 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.diai.reputation.Model.Employer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -37,6 +43,11 @@ public class Worker extends Fragment {
     Uri imageUri;
     ImageView workerImage;
     Intent crop;
+    private DatabaseReference mDatabase;
+    FirebaseUser currentFirebaseUser;
+    private EditText fname;
+    private EditText lname;
+    private EditText service;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -85,6 +96,10 @@ public class Worker extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fname = (EditText)getView().findViewById(R.id.fname);
+        lname = (EditText)getView().findViewById(R.id.lname);
+        service = (EditText)getView().findViewById(R.id.service);
+
         workerImage=(ImageView)getView().findViewById(R.id.workerImage);
 
         Bitmap bit= BitmapFactory.decodeResource(getResources(),R.drawable.images);
@@ -97,6 +112,23 @@ public class Worker extends Fragment {
             @Override
             public void onClick(View view) {
                 openGallery();
+            }
+        });
+        Button next = (Button) getView().findViewById(R.id.next);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+
+                Employer employer = new Employer(fname.getText().toString(),lname.getText().toString() ,service.getText().toString());
+                String userId = currentFirebaseUser.getUid();
+                mDatabase.child("workers").child(userId).setValue(employer);
+
+                Intent home=new Intent(getContext(),Home.class);
+                startActivity(home);
+                onDestroy();
             }
         });
     }

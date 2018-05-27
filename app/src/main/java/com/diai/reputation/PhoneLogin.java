@@ -95,12 +95,17 @@ public class PhoneLogin extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                        e1.getText().toString(),
-                        60,
-                        java.util.concurrent.TimeUnit.SECONDS,
-                        PhoneLogin.this,
-                        mCallbacks);
+                if (e1.getText().toString().isEmpty()){
+                    //show a hint
+                    e1.setError( "Phone Number is required!" );
+                }else {
+                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                            e1.getText().toString(),
+                            60,
+                            java.util.concurrent.TimeUnit.SECONDS,
+                            PhoneLogin.this,
+                            mCallbacks);
+                }
             }
         });
 
@@ -123,8 +128,9 @@ public class PhoneLogin extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                            // Log.d(TAG, "signInWithCredential:success");
-                            startActivity(new Intent(PhoneLogin.this,Registration.class));
                             Toast.makeText(PhoneLogin.this,"Verification Done",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(PhoneLogin.this,Registration.class));
+                            PhoneLogin.this.finish();
                             // ...
                         } else {
                            // Log.w(TAG, "signInWithCredential:failure", task.getException());

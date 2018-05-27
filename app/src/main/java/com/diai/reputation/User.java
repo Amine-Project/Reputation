@@ -17,7 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.diai.reputation.Model.Utilisater;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -36,12 +43,17 @@ public class User extends Fragment {
     Uri imageUri;
     ImageView userImage;
     Intent crop;
+    private DatabaseReference mDatabase;
+    FirebaseUser currentFirebaseUser;
+    private EditText fname;
+    private EditText lname;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
 
     public User() {
         // Required empty public constructor
@@ -86,6 +98,9 @@ public class User extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fname = (EditText)getView().findViewById(R.id.fname);
+        lname = (EditText)getView().findViewById(R.id.lname);
+
         userImage = (ImageView) getView().findViewById(R.id.userImage);
 
         Bitmap bit= BitmapFactory.decodeResource(getResources(),R.drawable.images);
@@ -105,6 +120,14 @@ public class User extends Fragment {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+
+                Utilisater utilisater = new Utilisater(fname.getText().toString(),lname.getText().toString() );
+                String userId = currentFirebaseUser.getUid();
+                mDatabase.child("users").child(userId).setValue(utilisater);
+
                 Intent home=new Intent(getContext(),Home.class);
                 startActivity(home);
                 onDestroy();
