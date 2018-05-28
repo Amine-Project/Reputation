@@ -24,4 +24,6 @@
     <string name="registration">Profile Information</string>
     <string name="title_activity_registration">registration</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="invitation_title">Invite Friends</string>
+    <string name="invitation_message">Hey Bro ! try this app it\'s amazing trust me</string>
 </resources>

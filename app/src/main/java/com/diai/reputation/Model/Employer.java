@@ -15,7 +15,6 @@ public class Employer {
         this.service = service;
     }
 
-    
     public String getFirstName() {
         return firstName;
     }

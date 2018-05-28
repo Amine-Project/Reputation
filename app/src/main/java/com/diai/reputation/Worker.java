@@ -21,10 +21,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.diai.reputation.Model.Employer;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 /**
@@ -40,14 +45,17 @@ public class Worker extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Uri imageUri;
-    ImageView workerImage;
-    Intent crop;
+
     private DatabaseReference mDatabase;
-    FirebaseUser currentFirebaseUser;
+    private FirebaseUser currentFirebaseUser;
+    private StorageReference mStorageRef;
     private EditText fname;
     private EditText lname;
     private EditText service;
+
+    Uri imageUri;
+    ImageView workerImage;
+    Intent crop;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,6 +104,9 @@ public class Worker extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
         fname = (EditText)getView().findViewById(R.id.fname);
         lname = (EditText)getView().findViewById(R.id.lname);
         service = (EditText)getView().findViewById(R.id.service);
@@ -125,6 +136,25 @@ public class Worker extends Fragment {
                 Employer employer = new Employer(fname.getText().toString(),lname.getText().toString() ,service.getText().toString());
                 String userId = currentFirebaseUser.getUid();
                 mDatabase.child("workers").child(userId).setValue(employer);
+                //Store the image in Firebase Storage
+                String path = "images/workers/"+userId;
+                StorageReference userImgRef = mStorageRef.child(path);
+                userImgRef.putFile(imageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // Get a URL to the uploaded content
+                                //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                // ...
+                            }
+                        });
+
 
                 Intent home=new Intent(getContext(),Home.class);
                 startActivity(home);

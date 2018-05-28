@@ -23,7 +23,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 public class PhoneLogin extends AppCompatActivity {
 
-    private static final String TAG = "PhoneLogin";
+    //private static final String TAG = "PhoneLogin";
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;

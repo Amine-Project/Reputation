@@ -13,7 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_launcher"
+        app:srcCompat="@drawable/splash_img" />
 
     <TextView
         android:id="@+id/textView2Phone"
