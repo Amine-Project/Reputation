@@ -131,6 +131,8 @@ public class Profile extends AppCompatActivity
                 for (String id : ids) {
                     Log.d(TAG, "onActivityResult: sent invitation " + id);
                 }
+                Toast.makeText(Profile.this,ids.length+"invitation sent",Toast.LENGTH_SHORT).show();
+
             } else {
                 // Sending failed or it was canceled, show failure message to the user
                 // ...

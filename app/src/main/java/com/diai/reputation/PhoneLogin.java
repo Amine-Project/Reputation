@@ -17,23 +17,37 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
 
 public class PhoneLogin extends AppCompatActivity {
 
-    //private static final String TAG = "PhoneLogin";
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
     TextView t1,t2;
     ImageView i1;
     EditText e1,e2;
     Button b1,b2;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener!=null){
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +62,26 @@ public class PhoneLogin extends AppCompatActivity {
         b2 = (Button)findViewById(R.id.OTPVERIFY);
         t2 = (TextView)findViewById(R.id.textViewVerified);
         mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+                if (currentFirebaseUser!=null){
+                    //User is signed in
+                    startActivity(new Intent(PhoneLogin.this,Profile.class));
+                    PhoneLogin.this.finish();
+                    Toast.makeText(PhoneLogin.this,"Successfully signed in with"+currentFirebaseUser.getPhoneNumber(),Toast.LENGTH_SHORT).show();//for Testing
+
+                }else {
+                    // No user is signed in
+                    Toast.makeText(PhoneLogin.this,"No user is signed in",Toast.LENGTH_SHORT).show();//for testing
+
+                }
+
+            }
+        };
+
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
