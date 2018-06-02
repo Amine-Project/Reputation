@@ -77,10 +77,10 @@ public class Profile extends AppCompatActivity {
                 note.setText(String.valueOf(rating));
                 //writing data to database
                 String key = mDatabase.child("ratings").push().getKey();
-                Rating rate=new Rating(key,userId,userId,val1,val2,val3,val4,val5);
+                Rating rate=new Rating(key,null,0,0,0,0,1);
 
-//                DatabaseReference ratingRef =mDatabase.child("ratings").getRef();
-//                ratingRef.child(key).setValue(rate);
+                //this line has a problem
+                mDatabase.child("users").child("1112345646846231").child("rated by").setValue("li7");
 
 
 
