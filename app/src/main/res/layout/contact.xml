@@ -59,11 +59,13 @@
             android:layout_marginRight="5dp"
             />
 
+
         <Button
             android:id="@+id/gRate"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/rate"
             />
+
     </LinearLayout>
 </RelativeLayout>

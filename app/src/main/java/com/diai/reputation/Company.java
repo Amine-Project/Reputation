@@ -1,5 +1,6 @@
 package com.diai.reputation;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -174,16 +175,17 @@ public class Company extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 2) {
-            imageUri = data.getData();
-            CropImage();
-        } else if (requestCode == 1) {
-            Bundle bundle = data.getExtras();
-            Bitmap bitmap = bundle.getParcelable("data");
-            RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-            round.setCircular(true);
-            companyLogo.setImageDrawable(round);
+        if(resultCode == Activity.RESULT_OK) {
+            if (requestCode == 2) {
+                imageUri = data.getData();
+                CropImage();
+            } else if (requestCode == 1) {
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = bundle.getParcelable("data");
+                RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+                round.setCircular(true);
+                companyLogo.setImageDrawable(round);
+            }
         }
     }
 

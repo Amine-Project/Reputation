@@ -1,5 +1,6 @@
 package com.diai.reputation;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -121,6 +122,7 @@ public class User extends Fragment {
         round.setCircular(true);
         userImage.setImageDrawable(round);
 
+
         Button btn = (Button) getView().findViewById(R.id.upload);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,21 +145,25 @@ public class User extends Fragment {
                     //Store the image in Firebase Storage
                     String path = "images/users/" + userId;
                     StorageReference userImgRef = mStorageRef.child(path);
-                    userImgRef.putFile(imageUri)
-                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // Get a URL to the uploaded content
-                                    //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    // ...
-                                }
-                            });
+                    try {
+                        userImgRef.putFile(imageUri)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // Get a URL to the uploaded content
+                                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                        // ...
+                                    }
+                                });
+                    }catch (Exception e){
+
+                    }
 
 
                     Intent intent = new Intent(getContext(), Contact_list.class);
@@ -199,7 +205,6 @@ public class User extends Fragment {
             round.setCircular(true);
             userImage.setImageDrawable(round);
         }
-
 
     }
 
