@@ -1,5 +1,6 @@
 package com.diai.reputation;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -136,7 +137,7 @@ public class User extends Fragment {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                 Utilisater utilisater = new Utilisater(fname.getText().toString(),lname.getText().toString() );
-                String userId = currentFirebaseUser.getUid();
+                final String userId = currentFirebaseUser.getUid();
                 mDatabase.child("users").child(userId).setValue(utilisater);
                 //Store the image in Firebase Storage
                 String path = "images/users/"+userId;
@@ -178,18 +179,18 @@ public class User extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 2) {
-            imageUri = data.getData();
-            CropImage();
-        } else if (requestCode == 1) {
-            Bundle bundle = data.getExtras();
-            Bitmap bitmap = bundle.getParcelable("data");
-            RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-            round.setCircular(true);
-            userImage.setImageDrawable(round);
+        if(resultCode == Activity.RESULT_OK) {
+            if (requestCode == 2) {
+                imageUri = data.getData();
+                CropImage();
+            } else if (requestCode == 1) {
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = bundle.getParcelable("data");
+                RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+                round.setCircular(true);
+                userImage.setImageDrawable(round);
+            }
         }
-
 
     }
 

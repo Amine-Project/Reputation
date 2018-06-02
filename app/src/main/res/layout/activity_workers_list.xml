@@ -6,6 +6,5 @@
     android:layout_height="match_parent"
     tools:context=".Workers_list">
 
-    <include layout="@layout/app_bar_profile"></include>
 
 </android.support.constraint.ConstraintLayout>
