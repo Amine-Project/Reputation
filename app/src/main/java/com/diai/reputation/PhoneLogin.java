@@ -69,7 +69,7 @@ public class PhoneLogin extends AppCompatActivity {
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                 if (currentFirebaseUser!=null){
                     //User is signed in
-                    startActivity(new Intent(PhoneLogin.this,Profile.class));
+                    startActivity(new Intent(PhoneLogin.this,Registration.class));
                     PhoneLogin.this.finish();
                     Toast.makeText(PhoneLogin.this,"Successfully signed in with"+currentFirebaseUser.getPhoneNumber(),Toast.LENGTH_SHORT).show();//for Testing
 

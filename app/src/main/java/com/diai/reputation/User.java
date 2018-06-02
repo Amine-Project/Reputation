@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.diai.reputation.Model.Utilisater;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -111,12 +112,12 @@ public class User extends Fragment {
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
-        fname = (EditText)getView().findViewById(R.id.fname);
-        lname = (EditText)getView().findViewById(R.id.lname);
+        fname = (EditText) getView().findViewById(R.id.fname);
+        lname = (EditText) getView().findViewById(R.id.lname);
         userImage = (ImageView) getView().findViewById(R.id.userImage);
 
-        Bitmap bit= BitmapFactory.decodeResource(getResources(),R.drawable.images);
-        RoundedBitmapDrawable round= RoundedBitmapDrawableFactory.create(getResources(),bit);
+        Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bit);
         round.setCircular(true);
         userImage.setImageDrawable(round);
 
@@ -133,34 +134,38 @@ public class User extends Fragment {
             @Override
             public void onClick(View view) {
                 //Write data into Firebase database
-                mDatabase = FirebaseDatabase.getInstance().getReference();
-                currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-                Utilisater utilisater = new Utilisater(fname.getText().toString(),lname.getText().toString() );
-                String userId = currentFirebaseUser.getUid();
-                mDatabase.child("users").child(userId).setValue(utilisater);
-                //Store the image in Firebase Storage
-                String path = "images/users/"+userId;
-                StorageReference userImgRef = mStorageRef.child(path);
-                userImgRef.putFile(imageUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // Get a URL to the uploaded content
-                                //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                                // ...
-                            }
-                        });
+                if ((!fname.getText().toString().isEmpty()) && (!lname.getText().toString().isEmpty())) {
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    Utilisater utilisater = new Utilisater(fname.getText().toString(), lname.getText().toString());
+                    String userId = new String(currentFirebaseUser.getUid());
+                    mDatabase.child("users").child(userId).setValue(utilisater);
+                    //Store the image in Firebase Storage
+                    String path = "images/users/" + userId;
+                    StorageReference userImgRef = mStorageRef.child(path);
+                    userImgRef.putFile(imageUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // Get a URL to the uploaded content
+                                    //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    // ...
+                                }
+                            });
 
 
-                Intent home=new Intent(getContext(),Home.class);
-                startActivity(home);
-                onDestroy();
+                    Intent intent = new Intent(getContext(), Contact_list.class);
+                    startActivity(intent);
+                    onDestroy();
+                }
+                else
+                    Toast.makeText(getContext(),"Fill all the filled",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -188,35 +193,36 @@ public class User extends Fragment {
             RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             round.setCircular(true);
             userImage.setImageDrawable(round);
+        }else{
+            Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bit);
+            round.setCircular(true);
+            userImage.setImageDrawable(round);
         }
 
 
     }
-
 
 
     private void CropImage() {
-        try{
+        try {
             crop = new Intent("com.android.camera.action.CROP");
-            crop.setDataAndType(imageUri,"image/*");
+            crop.setDataAndType(imageUri, "image/*");
 
 
-            crop.putExtra("crop","true");
-            crop.putExtra("outputX",180);
-            crop.putExtra("outputY",180);
-            crop.putExtra("aspectX",4);
-            crop.putExtra("aspectY",4);
-            crop.putExtra("scaleUpIfNeeded",true);
-            crop.putExtra("return-data",true);
-            startActivityForResult(crop,1);
-        }
-        catch (ActivityNotFoundException ex)
-        {
+            crop.putExtra("crop", "true");
+            crop.putExtra("outputX", 200);
+            crop.putExtra("outputY", 200);
+            crop.putExtra("aspectX", 4);
+            crop.putExtra("aspectY", 4);
+            crop.putExtra("scaleUpIfNeeded", true);
+            crop.putExtra("return-data", true);
+            startActivityForResult(crop, 1);
+        } catch (ActivityNotFoundException ex) {
 
         }
 
     }
-
 
 
     // TODO: Rename method, update argument and hook method into UI event

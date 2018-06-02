@@ -133,36 +133,39 @@ public class Company extends Fragment {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase = FirebaseDatabase.getInstance().getReference();
-                currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
 
-                Entreprise entreprise = new Entreprise(companyName.getText().toString(),service.getText().toString() );
-                String userId = currentFirebaseUser.getUid();
-                mDatabase.child("companies").child(userId).setValue(entreprise);
-                //Store the image in Firebase Storage
-                String path = "images/companies/"+userId;
-                StorageReference userImgRef = mStorageRef.child(path);
-                userImgRef.putFile(imageUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // Get a URL to the uploaded content
-                                //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                                // ...
-                            }
-                        });
+                if ((!companyName.getText().toString().isEmpty()) && (!service.getText().toString().isEmpty())) {
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                    Entreprise entreprise = new Entreprise(companyName.getText().toString(), service.getText().toString());
+                    String userId = currentFirebaseUser.getUid();
+                    mDatabase.child("companies").child(userId).setValue(entreprise);
+                    //Store the image in Firebase Storage
+                    String path = "images/companies/" + userId;
+                    StorageReference userImgRef = mStorageRef.child(path);
+                    userImgRef.putFile(imageUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // Get a URL to the uploaded content
+                                    //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    // ...
+                                }
+                            });
 
 
-                Intent home=new Intent(getContext(),Home.class);
-                startActivity(home);
-                onDestroy();
+                    Intent intent = new Intent(getContext(), Contact_list.class);
+                    startActivity(intent);
+                    onDestroy();
 
+                }
             }
         });
 
