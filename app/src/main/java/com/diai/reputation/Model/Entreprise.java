@@ -8,6 +8,12 @@ public class Entreprise {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
+    public Entreprise(Entreprise entreprise) {
+        companyName = entreprise.getCompanyName();
+        service=entreprise.getService();
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
+
     public Entreprise(String companyName, String service) {
         this.companyName = companyName;
         this.service = service;

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 
 import com.diai.reputation.Model.Employer;
+import com.diai.reputation.Model.Entreprise;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,6 +54,26 @@ public class Home extends AppCompatActivity {
                 for(DataSnapshot ds :dataSnapshot.getChildren()){
                     Employer employer = new Employer(ds.getValue(Employer.class));
                     itemList.add(new Item(employer.getFirstName(),employer.getLastName(),employer.getService()));
+                }
+                lv.setAdapter(new MyListAdapter());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
+
+        myRef = database.getReference("companies");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for(DataSnapshot ds :dataSnapshot.getChildren()){
+                    Entreprise entreprise = new Entreprise(ds.getValue(Entreprise.class));
+                    itemList.add(new Item(entreprise.getCompanyName(),null,entreprise.getService()));
                 }
                 lv.setAdapter(new MyListAdapter());
             }
@@ -162,7 +183,10 @@ public class Home extends AppCompatActivity {
 
 
             name.setText(itemList.get(position).name.toString());
-            sName.setText(itemList.get(position).sName);
+            if(itemList.get(position).sName!=null) {
+                sName.setText(itemList.get(position).sName);
+            }else
+                sName.setVisibility(View.INVISIBLE);
             service.setText(itemList.get(position).service);
 
 
@@ -178,6 +202,7 @@ public class Home extends AppCompatActivity {
         }
 
     }
+
 
     public class Item {
 
