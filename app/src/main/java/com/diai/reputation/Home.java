@@ -30,6 +30,7 @@ public class Home extends AppCompatActivity {
 
     private TextView mTextMessage;
     ArrayList<Home.Item> itemList= new ArrayList<>();
+    ArrayList<String> ids= new ArrayList<>();
     ListView lv;
 
 
@@ -54,8 +55,8 @@ public class Home extends AppCompatActivity {
                 for(DataSnapshot ds :dataSnapshot.getChildren()){
                     Employer employer = new Employer(ds.getValue(Employer.class));
                     itemList.add(new Item(employer.getFirstName(),employer.getLastName(),employer.getService()));
+                    ids.add(ds.getKey().toString());
                 }
-                lv.setAdapter(new MyListAdapter());
             }
 
             @Override
@@ -74,6 +75,7 @@ public class Home extends AppCompatActivity {
                 for(DataSnapshot ds :dataSnapshot.getChildren()){
                     Entreprise entreprise = new Entreprise(ds.getValue(Entreprise.class));
                     itemList.add(new Item(entreprise.getCompanyName(),null,entreprise.getService()));
+                    ids.add(ds.getKey().toString());
                 }
                 lv.setAdapter(new MyListAdapter());
             }
@@ -83,6 +85,9 @@ public class Home extends AppCompatActivity {
 
             }
         });
+
+
+
 
 /*
         if(itemList.size()>0)
@@ -195,7 +200,8 @@ public class Home extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(),Profile.class);
-                    startActivityForResult(intent,10);
+                    intent.putExtra("id",ids.get(position).toString());
+                    startActivity(intent);
                 }
             });
             return row;

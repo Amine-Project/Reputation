@@ -18,9 +18,6 @@ public class Profile extends AppCompatActivity {
 
     private String id;
 
-    public Profile(String userId){
-        id=userId;
-    }
 
     //private static final int REQUEST_INVITE = 100;
     private String TAG = "Profile";
@@ -43,12 +40,15 @@ public class Profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        id=getIntent().getExtras().getString("id");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //server side
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        final String userId = currentFirebaseUser.getUid();
+        //final String userId = currentFirebaseUser.getUid();
         //end
 
         fname = (TextView)findViewById(R.id.tvFname);
@@ -65,7 +65,7 @@ public class Profile extends AppCompatActivity {
         sbmtBtn = (Button)findViewById(R.id.submitBtn);
 
         //recpere these from listview item
-        fname.setText("mostapha");//
+        fname.setText(id);//
         lname.setText("amroch");
         service.setText("plombier");
 
@@ -86,7 +86,7 @@ public class Profile extends AppCompatActivity {
                 Rating rate=new Rating(key,null,0,0,0,0,1);
 
                 //this line has a problem
-                mDatabase.child("users").child("1112345646846231").child("rated by").setValue("li7");
+                //mDatabase.child("users").child("1112345646846231").child("rated by").setValue("li7");
 
 
 

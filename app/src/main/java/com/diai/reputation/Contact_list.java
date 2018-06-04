@@ -1,5 +1,6 @@
 package com.diai.reputation;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public class Contact_list extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if((rateNumber==0)&&(shareNumber==0)){
+        if((rateNumber<=0)&&(shareNumber<=0)){
             Intent intent=new Intent(this,Profile.class);
         }
 
@@ -100,7 +101,7 @@ public class Contact_list extends AppCompatActivity {
         public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
 
 
-            LayoutInflater inflater = getLayoutInflater();
+            final LayoutInflater inflater = getLayoutInflater();
             View row = inflater.inflate(R.layout.contact, parent, false);
             //ImageView image=(ImageView)findViewById(R.id.profile_image);
             final TextView name = (TextView) row.findViewById(R.id.contactName);
@@ -115,12 +116,12 @@ public class Contact_list extends AppCompatActivity {
             share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    /*Intent sendIntent = new Intent("android.intent.action.MAIN");
+                    Intent sendIntent = new Intent("android.intent.action.MAIN");
                     sendIntent.setComponent(new ComponentName("com.whatsapp","com.whatsapp.Conversation"));
                     sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phoneNumber.getText().toString())+"@s.whatsapp.net");
                     sendIntent.putExtra(Intent.EXTRA_TEXT, "Install Reputation App");
 
-                    startActivityForResult(sendIntent,5);*/
+                    startActivity(sendIntent);
                     shareNumber=shareNumber-1;
                     text.setText(Integer.toString(shareNumber));
 
@@ -130,10 +131,11 @@ public class Contact_list extends AppCompatActivity {
             rate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Intent intent = new Intent(view.getContext(),Profile.class);
+                    Intent intent = new Intent(view.getContext(),Profile.class);
                     rateNumber=rateNumber-1;
+                    intent.putExtra("id",phoneNumber.getText().toString());
                     text0.setText(Integer.toString(rateNumber));
-                    //startActivityForResult(intent,10);
+                    startActivityForResult(intent,10);
                 }
             });
             return row;
