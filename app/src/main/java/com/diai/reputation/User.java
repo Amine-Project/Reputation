@@ -104,76 +104,86 @@ public class User extends Fragment {
         // Inflate the layout for this fragment
 
         return inflater.inflate(R.layout.fragment_user, container, false);
+
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        if (ref.child("users").child(currentFirebaseUser.getUid()) != null) {
+            Intent intent = new Intent(getContext(), Contact_list.class);
+            startActivity(intent);
+            onDestroy();
+        } else {
+
+            mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
-        fname = (EditText) getView().findViewById(R.id.fname);
-        lname = (EditText) getView().findViewById(R.id.lname);
-        userImage = (ImageView) getView().findViewById(R.id.userImage);
+            fname = (EditText) getView().findViewById(R.id.fname);
+            lname = (EditText) getView().findViewById(R.id.lname);
+            userImage = (ImageView) getView().findViewById(R.id.userImage);
 
-        Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-        RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bit);
-        round.setCircular(true);
-        userImage.setImageDrawable(round);
-
-
-        Button btn = (Button) getView().findViewById(R.id.upload);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openGallery();
-            }
-        });
-
-        Button next = (Button) getView().findViewById(R.id.next);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Write data into Firebase database
-                if ((!fname.getText().toString().isEmpty()) && (!lname.getText().toString().isEmpty())) {
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
-                    currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    Utilisater utilisater = new Utilisater(fname.getText().toString(), lname.getText().toString());
-                    String userId = new String(currentFirebaseUser.getUid());
-                    mDatabase.child("users").child(userId).setValue(utilisater);
-                    //Store the image in Firebase Storage
-                    String path = "images/users/" + userId;
-                    StorageReference userImgRef = mStorageRef.child(path);
-                    try {
-                        userImgRef.putFile(imageUri)
-                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        // Get a URL to the uploaded content
-                                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle unsuccessful uploads
-                                        // ...
-                                    }
-                                });
-                    }catch (Exception e){
-
-                    }
+            Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bit);
+            round.setCircular(true);
+            userImage.setImageDrawable(round);
 
 
-                    Intent intent = new Intent(getContext(), Contact_list.class);
-                    startActivity(intent);
-                    onDestroy();
+            Button btn = (Button) getView().findViewById(R.id.upload);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openGallery();
                 }
-                else
-                    Toast.makeText(getContext(),"Fill all the filled",Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+
+            Button next = (Button) getView().findViewById(R.id.next);
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Write data into Firebase database
+                    if ((!fname.getText().toString().isEmpty()) && (!lname.getText().toString().isEmpty())) {
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        //currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        Utilisater utilisater = new Utilisater(fname.getText().toString(), lname.getText().toString());
+                        String userId = new String(currentFirebaseUser.getUid());
+                        mDatabase.child("users").child(userId).setValue(utilisater);
+                        //Store the image in Firebase Storage
+                        String path = "images/users/" + userId;
+                        StorageReference userImgRef = mStorageRef.child(path);
+                        try {
+                            userImgRef.putFile(imageUri)
+                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            // Get a URL to the uploaded content
+                                            //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            // Handle unsuccessful uploads
+                                            // ...
+                                        }
+                                    });
+                        } catch (Exception e) {
+
+                        }
+
+
+                        Intent intent = new Intent(getContext(), Contact_list.class);
+                        startActivity(intent);
+                        onDestroy();
+                    } else
+                        Toast.makeText(getContext(), "Fill all the filled", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override

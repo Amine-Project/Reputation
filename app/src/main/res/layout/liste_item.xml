@@ -16,6 +16,7 @@
             android:id="@+id/profile_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_marginLeft="8dp"
             android:layout_alignParentLeft="true"
             android:src="@drawable/images"
             android:layout_centerInParent="true" />
@@ -33,19 +34,22 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/name" />
+                android:text="@string/name"
+                android:layout_marginLeft="8dp"/>
 
             <TextView
                 android:id="@+id/sName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/sName" />
+                android:text="@string/sName"
+                android:layout_marginLeft="8dp"/>
 
             <TextView
                 android:id="@+id/service"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/service" />
+                android:text="@string/service"
+                android:layout_marginLeft="8dp"/>
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -57,9 +61,9 @@
 
         <Button
             android:id="@+id/gRate"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginRight="16dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/rate"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

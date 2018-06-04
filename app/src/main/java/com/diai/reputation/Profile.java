@@ -16,6 +16,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Profile extends AppCompatActivity {
 
+    private String id;
+
+    public Profile(String userId){
+        id=userId;
+    }
+
     //private static final int REQUEST_INVITE = 100;
     private String TAG = "Profile";
     private TextView fname;

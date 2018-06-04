@@ -9,6 +9,12 @@ public class Employer {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
+    public Employer(Employer employer){
+        firstName=employer.getFirstName();
+        lastName=employer.getLastName();
+        service=employer.getService();
+    }
+
     public Employer(String firstName, String lastName, String service) {
         this.firstName = firstName;
         this.lastName = lastName;
