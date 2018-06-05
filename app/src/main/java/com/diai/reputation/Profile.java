@@ -96,6 +96,7 @@ public class Profile extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        finish();
     }
 
 }

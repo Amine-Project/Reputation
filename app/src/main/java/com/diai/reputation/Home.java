@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.diai.reputation.Model.Employer;
@@ -78,6 +79,7 @@ public class Home extends AppCompatActivity {
                     ids.add(ds.getKey().toString());
                 }
                 lv.setAdapter(new MyListAdapter());
+                //lv.setOnClickListener(new On);
             }
 
             @Override
@@ -201,6 +203,15 @@ public class Home extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(),Profile.class);
                     intent.putExtra("id",ids.get(position).toString());
+                    startActivity(intent);
+                }
+            });
+
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(),Contact.class);
+                    //intent.putExtra("id",ids.get(position).toString());
                     startActivity(intent);
                 }
             });

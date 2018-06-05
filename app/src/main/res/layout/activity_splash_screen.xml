@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashScreen">
+    tools:context=".SplashScreen"
+    android:orientation="vertical"
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="238dp"
-        android:layout_height="252dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="104dp"
-        app:srcCompat="@drawable/splash_img" />
+        android:layout_marginBottom="60dp"
+        app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="167dp"
-        android:text="know what others think about you"
-        android:textSize="18sp" />
-</RelativeLayout>
+        android:textColor="#1E2C51"
+        android:text="Know what others think about you"
+        android:textSize="18sp"
+        app:fontFamily="@font/handlee" />
+</LinearLayout>

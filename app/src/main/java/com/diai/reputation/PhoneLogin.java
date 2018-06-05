@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,20 +22,22 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class PhoneLogin extends AppCompatActivity {
 
-    private boolean mVerificationInProgress = false;
     private String mVerificationId;
-    private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
     TextView t1,t2;
     ImageView i1;
     EditText e1,e2;
-    Button b1,b2;
+    ImageButton b1,b2;
+    FrameLayout frameLayout;
+
 
     @Override
     protected void onStart() {
@@ -54,12 +58,15 @@ public class PhoneLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_login);
 
+        frameLayout = (FrameLayout)findViewById(R.id.frameLay);
+
+        final ImageView logo = (ImageView)findViewById(R.id.logo);
         e1 = (EditText) findViewById(R.id.Phonenoedittext);
-        b1 = (Button) findViewById(R.id.PhoneVerify);
+        b1 = (ImageButton) findViewById(R.id.PhoneVerify);
         t1 = (TextView)findViewById(R.id.textView2Phone);
         i1 = (ImageView)findViewById(R.id.imageView2Phone);
         e2 = (EditText) findViewById(R.id.OTPeditText);
-        b2 = (Button)findViewById(R.id.OTPVERIFY);
+        b2 = (ImageButton)findViewById(R.id.OTPVERIFY);
         t2 = (TextView)findViewById(R.id.textViewVerified);
         mAuth = FirebaseAuth.getInstance();
 
@@ -87,7 +94,6 @@ public class PhoneLogin extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
                // Log.d(TAG, "onVerificationCompleted:" + credential);
-                mVerificationInProgress = false;
                 Toast.makeText(PhoneLogin.this,"Verification Complete",Toast.LENGTH_SHORT).show();
                signInWithPhoneAuthCredential(credential);
             }
@@ -114,14 +120,13 @@ public class PhoneLogin extends AppCompatActivity {
                 Toast.makeText(PhoneLogin.this,"Verification code has been sent",Toast.LENGTH_SHORT).show();
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
-                mResendToken = token;
                 e1.setVisibility(View.GONE);
                 b1.setVisibility(View.GONE);
                 t1.setVisibility(View.GONE);
                 i1.setVisibility(View.GONE);
-                t2.setVisibility(View.VISIBLE);
-                e2.setVisibility(View.VISIBLE);
-                b2.setVisibility(View.VISIBLE);
+                logo.setVisibility(View.GONE);
+
+                frameLayout.setVisibility(View.VISIBLE);
                 // ...
             }
         };
@@ -149,6 +154,11 @@ public class PhoneLogin extends AppCompatActivity {
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, e2.getText().toString());
                 // [END verify_with_code]
                 signInWithPhoneAuthCredential(credential);
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("phoneNumbers");
+
+                myRef.setValue(FirebaseAuth.getInstance().getCurrentUser(),e1.getText().toString());
             }
         });
 
@@ -176,4 +186,5 @@ public class PhoneLogin extends AppCompatActivity {
                     }
                 });
     }
+
 }

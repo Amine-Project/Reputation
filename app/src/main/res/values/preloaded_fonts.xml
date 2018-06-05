@@ -3,6 +3,7 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/advent_pro</item>
         <item>@font/advent_pro_medium</item>
+        <item>@font/handlee</item>
         <item>@font/roboto_medium</item>
     </array>
 </resources>
