@@ -8,15 +8,62 @@ public class Rating {
     private float sociability;
     private float respect;
 
-    public Rating(float seriousness, float loyalty, float punctuality, float sociability, float respect) {
+    private float avg;
+
+    public Rating(float seriousness, float loyalty, float punctuality, float sociability, float respect,float  avg) {
         this.seriousness = seriousness;
         this.loyalty = loyalty;
         this.punctuality = punctuality;
         this.sociability = sociability;
         this.respect = respect;
+        this.avg=avg;
     }
 
+    public float getSeriousness() {
+        return seriousness;
+    }
 
+    public void setSeriousness(float seriousness) {
+        this.seriousness = seriousness;
+    }
 
+    public float getLoyalty() {
+        return loyalty;
+    }
 
+    public void setLoyalty(float loyalty) {
+        this.loyalty = loyalty;
+    }
+
+    public float getPunctuality() {
+        return punctuality;
+    }
+
+    public void setPunctuality(float punctuality) {
+        this.punctuality = punctuality;
+    }
+
+    public float getSociability() {
+        return sociability;
+    }
+
+    public void setSociability(float sociability) {
+        this.sociability = sociability;
+    }
+
+    public float getRespect() {
+        return respect;
+    }
+
+    public void setRespect(float respect) {
+        this.respect = respect;
+    }
+
+    public float getAvg() {
+        return avg;
+    }
+
+    public void setAvg(float avg) {
+        this.avg = avg;
+    }
 }

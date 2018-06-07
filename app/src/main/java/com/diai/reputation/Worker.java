@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.diai.reputation.Model.Employer;
+import com.diai.reputation.Model.Rating;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -157,8 +158,9 @@ public class Worker extends Fragment {
                     Employer employer = new Employer(fname.getText().toString(), lname.getText().toString(), service.getText().toString());
                     String userId = currentFirebaseUser.getUid();
                     mDatabase.child("workers").child(userId).setValue(employer);
+                    //mDatabase.child("workers").child(userId).child("rating").setValue(new Rating(0,0,0,0,0,0));
                     //Store the image in Firebase Storage
-                    String path = "images/workers/" + userId;
+                    String path = "images/" + userId;
                     StorageReference userImgRef = mStorageRef.child(path);
                     userImgRef.putFile(imageUri)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

@@ -9,7 +9,7 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/contact_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/images"
@@ -21,7 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:orientation="vertical"
-        android:layout_toRightOf="@id/profile_image"
+        android:layout_toRightOf="@id/contact_image"
         android:layout_toLeftOf="@id/left"
         android:gravity="center_vertical">
 

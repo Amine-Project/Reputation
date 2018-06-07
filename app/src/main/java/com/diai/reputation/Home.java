@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.diai.reputation.Model.Employer;
 import com.diai.reputation.Model.Entreprise;
+import com.diai.reputation.Model.Rating;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +39,7 @@ public class Home extends AppCompatActivity {
     private TextView mTextMessage;
     ArrayList<Home.Item> itemList = new ArrayList<>();
     ArrayList<String> ids = new ArrayList<>();
+    ArrayList<String> parent = new ArrayList<>();
     ListView lv;
 
     //StorageReference gsReference = FirebaseStorage.getInstance().getReference().child("images/C4BYE5H0pzM0tm67giCGSFopVP62.jpg");
@@ -54,6 +56,7 @@ public class Home extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("workers");
 
+        final DatabaseReference finalMyRef = myRef;
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -62,7 +65,16 @@ public class Home extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Employer employer = new Employer(ds.getValue(Employer.class));
                     itemList.add(new Item(employer.getFirstName(), employer.getLastName(), employer.getService()));
+
                     ids.add(ds.getKey().toString());
+                   /* if(ds.hasChild("rating")){
+                        Rating rating=ds.child("rating").getValue(Rating.class);
+
+                    }
+                    else {
+                        finalMyRef.child("rating").setValue(new Rating(0,0,0,0,0,0));
+                        Rating rating=ds.child("rating").getValue(Rating.class);
+                    }*/
                 }
             }
 
@@ -83,6 +95,7 @@ public class Home extends AppCompatActivity {
                     Entreprise entreprise = new Entreprise(ds.getValue(Entreprise.class));
                     itemList.add(new Item(entreprise.getCompanyName(), null, entreprise.getService()));
                     ids.add(ds.getKey().toString());
+                    parent.add("companies");
                 }
                 lv.setAdapter(new MyListAdapter());
                 //lv.setOnClickListener(new On);
@@ -97,6 +110,43 @@ public class Home extends AppCompatActivity {
 
 
 
+
+/*
+        DatabaseReference data = FirebaseDatabase.getInstance().getReference().child(parent);
+        DatabaseReference myRef = data.child(parent);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds.getKey().equals(id)) {
+                        if (parent == "workers") {
+                            if(ds.hasChild("rating")){
+                                Rating rating=ds.child("rating").getValue(Rating.class);
+                            }
+                            else {
+                                mDatabase.child(parent).child(id).child("rating").setValue(new Rating(0,0,0,0,0,0));
+                                Rating rating=ds.child("rating").getValue(Rating.class);
+                            }
+                        } else if (parent == "companies") {
+                            if(ds.hasChild("rating")){
+                                Rating rating=ds.child("rating").getValue(Rating.class);
+                            }
+                            else {
+                                mDatabase.child(parent).child(id).child("rating").setValue(new Rating(0,0,0,0,0,0));
+                                Rating rating=ds.child("rating").getValue(Rating.class);
+                            }
+                        }
+                    }
+
+                }
+                String value = dataSnapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });*/
 /*
         if(itemList.size()>0)
         {
@@ -205,7 +255,7 @@ public class Home extends AppCompatActivity {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
 
-            storageRef.child("images/awq7Sdx1zZUZPvVvNd5PqTAL6Ao2").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            storageRef.child("images/"+ids.get(position)).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     Glide.with(row.getContext())
@@ -223,6 +273,7 @@ public class Home extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), Profile.class);
                     intent.putExtra("id", ids.get(position).toString());
+                    intent.putExtra("parent", ids.get(position).toString());
                     startActivity(intent);
                 }
             });

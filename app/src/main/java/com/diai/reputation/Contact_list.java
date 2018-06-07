@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.Manifest;
@@ -27,6 +28,9 @@ import android.widget.Toast;
 
 //import com.bumptech.glide.Glide;
 //import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -92,7 +96,6 @@ public class Contact_list extends AppCompatActivity {
 
 
         loadValue(shareNumber, rateNumber);
-
 
 
         lv.setAdapter(listAdpter);
@@ -242,6 +245,22 @@ public class Contact_list extends AppCompatActivity {
                                 contactList.get(i).found = true;
                                 //id = ds.getValue(String.class);
                                 count++;
+
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                StorageReference storageRef = storage.getReference();
+
+                                final int finalI = i;
+                                storageRef.child("images/" + ds.getKey().toString()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        contactList.get(finalI).image = uri;
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        contactList.get(finalI).image = null;
+                                    }
+                                });
                                 break;
                             }
                         }
@@ -306,7 +325,7 @@ public class Contact_list extends AppCompatActivity {
             final TextView phoneNumber = (TextView) row.findViewById(R.id.contactPhone);
             Button share = (Button) row.findViewById(R.id.share);
             final Button rate = (Button) row.findViewById(R.id.gRate);
-            final CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
+            final CircleImageView imageView = (CircleImageView) row.findViewById(R.id.contact_image);
 
 
             phoneNumber.setText(contactList.get(position).phoneNumber);
@@ -346,6 +365,13 @@ public class Contact_list extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+
+                if (contactList.get(position).image != null){
+                    Glide.with(row.getContext())
+                            .load(contactList.get(position).image)
+                            .into(imageView);
+                }
+
             } else
                 rate.setVisibility(View.GONE);
 
@@ -356,7 +382,7 @@ public class Contact_list extends AppCompatActivity {
     }
 
     private class Contact {
-        int image;
+        Uri image;
         String name;
         String phoneNumber;
         boolean found;
@@ -364,7 +390,8 @@ public class Contact_list extends AppCompatActivity {
         public Contact(String name, String phoneNumber) {
             this.name = name;
             this.phoneNumber = phoneNumber;
-            found=false;
+            found = false;
+            image = null;
         }
 
     }
