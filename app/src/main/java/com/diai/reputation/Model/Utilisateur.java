@@ -1,14 +1,14 @@
 package com.diai.reputation.Model;
 
-public class Utilisater {
+public class Utilisateur {
     public String firstName;
     public String lastName;
 
-    public Utilisater() {
+    public Utilisateur() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Utilisater(String firstName, String lastName) {
+    public Utilisateur(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }

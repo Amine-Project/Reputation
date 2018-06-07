@@ -155,10 +155,8 @@ public class PhoneLogin extends AppCompatActivity {
                 // [END verify_with_code]
                 signInWithPhoneAuthCredential(credential);
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("phoneNumbers");
 
-                myRef.setValue(FirebaseAuth.getInstance().getCurrentUser(),e1.getText().toString());
+                //myRef.setValue(FirebaseAuth.getInstance().getCurrentUser(),e1.getText().toString());
             }
         });
 
@@ -173,6 +171,10 @@ public class PhoneLogin extends AppCompatActivity {
                         if (task.isSuccessful()) {
                            // Log.d(TAG, "signInWithCredential:success");
                             Toast.makeText(PhoneLogin.this,"Verification Done",Toast.LENGTH_SHORT).show();
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference myRef = database.getReference();
+
+                            myRef.child("phoneNumbers").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(e1.getText().toString());
                             startActivity(new Intent(PhoneLogin.this,Registration.class));
                             PhoneLogin.this.finish();
                             // ...

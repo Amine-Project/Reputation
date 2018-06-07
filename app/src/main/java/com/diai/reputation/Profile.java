@@ -7,12 +7,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.diai.reputation.Model.Entreprise;
 import com.diai.reputation.Model.Rating;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Profile extends AppCompatActivity {
 
@@ -71,22 +76,41 @@ public class Profile extends AppCompatActivity {
 
         sbmtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 //updating ui
                 float val1= ratingbar1.getRating();
                 float val2= ratingbar2.getRating();
                 float val3= ratingbar3.getRating();
                 float val4= ratingbar4.getRating();
                 float val5= ratingbar5.getRating();
-                double rating = (val1+val2+val3+val4+val5)/5.0;
-                ratingbar6.setRating(((float) rating));
-                note.setText(String.valueOf(rating));
-                //writing data to database
-                String key = mDatabase.child("ratings").push().getKey();
-                Rating rate=new Rating(key,null,0,0,0,0,1);
+                if((val1!=0)&&(val2!=0)&&(val3!=0)&&(val4!=0)&&(val5!=0)){
+                    double rating = (val1+val2+val3+val4+val5)/5.0;
+                    ratingbar6.setRating(((float) rating));
+                    note.setText(String.valueOf(rating));
+                    //writing data to database
+                    //String key = mDatabase.child("rated").push().getKey();
+                    final Rating rate=new Rating(val1,val2,val3,val4,val5);
+                    mDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // This method is called once with the initial value and again
+                            // whenever data at this location is updated.
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                if(ds.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                                    mDatabase.child(ds.getKey()).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("rated by").child(id).setValue(rate);
+                                    Toast.makeText(v.getContext(),"Inserted",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
 
-                //this line has a problem
-                //mDatabase.child("users").child("1112345646846231").child("rated by").setValue("li7");
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                        }
+                    });
+                }
+                else
+                    Toast.makeText(v.getContext(),"Rate all fields",Toast.LENGTH_SHORT).show();
+
 
 
 

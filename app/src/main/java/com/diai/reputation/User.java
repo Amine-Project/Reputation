@@ -1,6 +1,5 @@
 package com.diai.reputation;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +21,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.diai.reputation.Model.Utilisater;
+import com.diai.reputation.Model.Utilisateur;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -67,6 +69,23 @@ public class User extends Fragment {
 
 
     public User() {
+        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(currentFirebaseUser.getUid())){
+                    Intent intent = new Intent(getContext(), Contact_list.class);
+                    startActivity(intent);
+                    onDestroy();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         // Required empty public constructor
     }
 
@@ -90,12 +109,12 @@ public class User extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -112,13 +131,7 @@ public class User extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        if (ref.child("users").child(currentFirebaseUser.getUid()) != null) {
-            Intent intent = new Intent(getContext(), Contact_list.class);
-            startActivity(intent);
-            onDestroy();
-        } else {
+
 
             mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -149,11 +162,11 @@ public class User extends Fragment {
                     if ((!fname.getText().toString().isEmpty()) && (!lname.getText().toString().isEmpty())) {
                         mDatabase = FirebaseDatabase.getInstance().getReference();
                         //currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                        Utilisater utilisater = new Utilisater(fname.getText().toString(), lname.getText().toString());
+                        Utilisateur utilisateur = new Utilisateur(fname.getText().toString(), lname.getText().toString());
                         String userId = new String(currentFirebaseUser.getUid());
-                        mDatabase.child("users").child(userId).setValue(utilisater);
+                        mDatabase.child("users").child(userId).setValue(utilisateur);
                         //Store the image in Firebase Storage
-                        String path = "images/users/" + userId;
+                        String path = "images/" + userId;
                         StorageReference userImgRef = mStorageRef.child(path);
                         try {
                             userImgRef.putFile(imageUri)
@@ -184,7 +197,7 @@ public class User extends Fragment {
                 }
             });
         }
-    }
+
 
     @Override
     public void onDestroy() {

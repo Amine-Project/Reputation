@@ -13,6 +13,14 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary">
 
+            <ImageButton
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_arrow_back"
+                android:layout_marginRight="16dp"
+                />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -23,59 +31,74 @@
 
         </android.support.v7.widget.Toolbar>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="98dp"
-            android:orientation="horizontal">
-
-            <ImageView
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="50dp"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageView4"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/images" />
+                android:src="@drawable/images"
+                android:layout_marginRight="16dp"
+                />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/textView1"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:text="First Name:"
                     android:textColor="@color/text_color_icon" />
 
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:text="Last Name:"
-                    android:textColor="@color/text_color_icon" />
+                    android:textColor="@color/text_color_icon"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:text="Service:"
                     android:textColor="@color/text_color_icon" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/tvFname"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:text="TextView"
                     android:textColor="@color/text_color_icon"
                     android:textStyle="bold" />
@@ -83,17 +106,17 @@
                 <TextView
                     android:id="@+id/tvLname"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:text="TextView"
                     android:textColor="@color/text_color_icon"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:id="@+id/tvService"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
                     android:text="TextView"
                     android:textColor="@color/text_color_icon"
                     android:textStyle="bold" />
@@ -101,60 +124,45 @@
             </LinearLayout>
         </LinearLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="30dp"
+        android:gravity="center_horizontal">
 
         <TextView
             android:id="@+id/phone"
             android:layout_width="wrap_content"
-            android:layout_height="27dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:text="+212697583665"
             android:textColor="#000"
             android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.293" />
+            app:fontFamily="@font/aldrich" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="104dp"
-            android:layout_marginStart="104dp"
-            android:layout_marginTop="8dp"
-            android:text="Call"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone"
-            app:layout_constraintVertical_bias="0.184" />
+            android:layout_weight="1"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/call"/>
 
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Message"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.157"
-            app:layout_constraintStart_toEndOf="@+id/button"
-            app:layout_constraintTop_toBottomOf="@+id/phone"
-            app:layout_constraintVertical_bias="0.184" />
-    </android.support.constraint.ConstraintLayout>
-
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/message"/>
+        </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

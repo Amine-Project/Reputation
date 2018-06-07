@@ -70,7 +70,7 @@
                     android:id="@+id/shareNb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
+                    android:text=" "
                     android:textColor="#000"
                     android:textSize="22sp"
                     app:fontFamily="@font/advent_pro" />
@@ -96,7 +96,7 @@
                     android:id="@+id/rateNb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2"
+                    android:text=" "
                     android:textColor="#000"
                     android:textSize="22sp"
                     app:fontFamily="@font/advent_pro" />

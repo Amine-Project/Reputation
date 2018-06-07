@@ -50,6 +50,12 @@
         android:gravity="center_vertical"
         android:layout_alignParentRight="true">
 
+        <Button
+            android:id="@+id/gRate"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/rate"
+            />
 
         <Button
             android:id="@+id/share"
@@ -57,14 +63,6 @@
             android:layout_height="45dp"
             android:background="@drawable/share"
             android:layout_marginRight="5dp"
-            />
-
-
-        <Button
-            android:id="@+id/gRate"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/rate"
             />
 
     </LinearLayout>

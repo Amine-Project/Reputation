@@ -2,6 +2,7 @@ package com.diai.reputation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,30 +12,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.diai.reputation.Model.Employer;
 import com.diai.reputation.Model.Entreprise;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
 
     private TextView mTextMessage;
-    ArrayList<Home.Item> itemList= new ArrayList<>();
-    ArrayList<String> ids= new ArrayList<>();
+    ArrayList<Home.Item> itemList = new ArrayList<>();
+    ArrayList<String> ids = new ArrayList<>();
     ListView lv;
 
-
+    //StorageReference gsReference = FirebaseStorage.getInstance().getReference().child("images/C4BYE5H0pzM0tm67giCGSFopVP62.jpg");
 
 
     @Override
@@ -43,7 +49,7 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         mTextMessage = (TextView) findViewById(R.id.message);
-        lv=(ListView)findViewById(R.id.mainList);
+        lv = (ListView) findViewById(R.id.mainList);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("workers");
@@ -53,9 +59,9 @@ public class Home extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                for(DataSnapshot ds :dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Employer employer = new Employer(ds.getValue(Employer.class));
-                    itemList.add(new Item(employer.getFirstName(),employer.getLastName(),employer.getService()));
+                    itemList.add(new Item(employer.getFirstName(), employer.getLastName(), employer.getService()));
                     ids.add(ds.getKey().toString());
                 }
             }
@@ -73,9 +79,9 @@ public class Home extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                for(DataSnapshot ds :dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Entreprise entreprise = new Entreprise(ds.getValue(Entreprise.class));
-                    itemList.add(new Item(entreprise.getCompanyName(),null,entreprise.getService()));
+                    itemList.add(new Item(entreprise.getCompanyName(), null, entreprise.getService()));
                     ids.add(ds.getKey().toString());
                 }
                 lv.setAdapter(new MyListAdapter());
@@ -103,7 +109,7 @@ public class Home extends AppCompatActivity {
     }
 
 
-    public  ArrayList<Home.Item> load(){
+    public ArrayList<Home.Item> load() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         // Read from the database
@@ -112,9 +118,9 @@ public class Home extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                for(DataSnapshot ds :dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Employer employer = new Employer(ds.getValue(Employer.class));
-                    itemList.add(new Item(employer.getFirstName(),employer.getLastName(),employer.getService()));
+                    itemList.add(new Item(employer.getFirstName(), employer.getLastName(), employer.getService()));
                 }
             }
 
@@ -150,7 +156,6 @@ public class Home extends AppCompatActivity {
 */
 
 
-
     private class MyListAdapter extends BaseAdapter {
 
         //Context context;
@@ -181,28 +186,43 @@ public class Home extends AppCompatActivity {
 
 
             LayoutInflater inflater = getLayoutInflater();
-            View row = inflater.inflate(R.layout.liste_item, parent, false);
+            final View row = inflater.inflate(R.layout.liste_item, parent, false);
             //ImageView image=(ImageView)findViewById(R.id.profile_image);
             final TextView name = (TextView) row.findViewById(R.id.name);
             final TextView sName = (TextView) row.findViewById(R.id.sName);
             final TextView service = (TextView) row.findViewById(R.id.service);
-            Button rate=(Button)row.findViewById(R.id.gRate);
+            Button rate = (Button) row.findViewById(R.id.gRate);
+            final ImageView imageView = (ImageView) row.findViewById(R.id.pro_image);
 
 
             name.setText(itemList.get(position).name.toString());
-            if(itemList.get(position).sName!=null) {
+            if (itemList.get(position).sName != null) {
                 sName.setText(itemList.get(position).sName);
-            }else
-                sName.setVisibility(View.INVISIBLE);
+            } else
+                sName.setVisibility(View.GONE);
             service.setText(itemList.get(position).service);
 
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
 
-
+            storageRef.child("images/awq7Sdx1zZUZPvVvNd5PqTAL6Ao2").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(row.getContext())
+                            .load(uri)
+                            .into(imageView);
+                }
+            });
+/*
+            Glide.with(row.getContext())
+                    .load("https://firebasestorage.googleapis.com/v0/b/reputation-8bc29.appspot.com/o/images%2FC4BYE5H0pzM0tm67giCGSFopVP62.jpg?alt=media&token=3f3f61b4-d96c-48c3-9493-f8b9f80d3104")
+                    .into(imageView);
+*/
             rate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(),Profile.class);
-                    intent.putExtra("id",ids.get(position).toString());
+                    Intent intent = new Intent(view.getContext(), Profile.class);
+                    intent.putExtra("id", ids.get(position).toString());
                     startActivity(intent);
                 }
             });
@@ -210,7 +230,7 @@ public class Home extends AppCompatActivity {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(),Contact.class);
+                    Intent intent = new Intent(v.getContext(), Contact.class);
                     //intent.putExtra("id",ids.get(position).toString());
                     startActivity(intent);
                 }
