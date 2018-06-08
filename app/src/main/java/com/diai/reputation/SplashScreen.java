@@ -25,7 +25,6 @@ public class SplashScreen extends AppCompatActivity {
 
         if(first){
             save();
-            Toast.makeText(this,"First Run",Toast.LENGTH_SHORT).show();
             getSharedPreferences("PREDERENCE",MODE_PRIVATE).edit().putBoolean("isFirstRun",false).commit();
         }
 

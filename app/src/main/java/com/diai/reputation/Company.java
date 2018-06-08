@@ -101,7 +101,7 @@ public class Company extends Fragment {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(currentFirebaseUser.getUid())){
+                if (dataSnapshot.hasChild(currentFirebaseUser.getUid())) {
                     Intent intent = new Intent(getContext(), Contact_list.class);
                     startActivity(intent);
                     onDestroy();
@@ -133,13 +133,13 @@ public class Company extends Fragment {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        companyName = (EditText)getView().findViewById(R.id.cname);
-        service = (EditText)getView().findViewById(R.id.service);
+        companyName = (EditText) getView().findViewById(R.id.cname);
+        service = (EditText) getView().findViewById(R.id.service);
 
-        companyLogo=(ImageView)getView().findViewById(R.id.companyLogo);
+        companyLogo = (ImageView) getView().findViewById(R.id.companyLogo);
 
-        Bitmap bit= BitmapFactory.decodeResource(getResources(),R.drawable.images);
-        RoundedBitmapDrawable round= RoundedBitmapDrawableFactory.create(getResources(),bit);
+        Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bit);
         round.setCircular(true);
         companyLogo.setImageDrawable(round);
 
@@ -164,23 +164,24 @@ public class Company extends Fragment {
                     String userId = currentFirebaseUser.getUid();
                     mDatabase.child("companies").child(userId).setValue(entreprise);
                     //Store the image in Firebase Storage
-                    String path = "images/companies/" + userId;
+                    String path = "images/" + userId;
                     StorageReference userImgRef = mStorageRef.child(path);
-                    userImgRef.putFile(imageUri)
-                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // Get a URL to the uploaded content
-                                    //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    // ...
-                                }
-                            });
+                    if (imageUri != null)
+                        userImgRef.putFile(imageUri)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // Get a URL to the uploaded content
+                                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                        // ...
+                                    }
+                                });
 
 
                     Intent intent = new Intent(getContext(), Contact_list.class);
@@ -196,7 +197,7 @@ public class Company extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 2) {
                 imageUri = data.getData();
                 CropImage();
@@ -211,22 +212,20 @@ public class Company extends Fragment {
     }
 
     private void CropImage() {
-        try{
+        try {
             crop = new Intent("com.android.camera.action.CROP");
-            crop.setDataAndType(imageUri,"image/*");
+            crop.setDataAndType(imageUri, "image/*");
 
 
-            crop.putExtra("crop","true");
-            crop.putExtra("outputX",180);
-            crop.putExtra("outputY",180);
-            crop.putExtra("aspectX",4);
-            crop.putExtra("aspectY",4);
-            crop.putExtra("scaleUpIfNeeded",true);
-            crop.putExtra("return-data",true);
-            startActivityForResult(crop,1);
-        }
-        catch (ActivityNotFoundException ex)
-        {
+            crop.putExtra("crop", "true");
+            crop.putExtra("outputX", 180);
+            crop.putExtra("outputY", 180);
+            crop.putExtra("aspectX", 4);
+            crop.putExtra("aspectY", 4);
+            crop.putExtra("scaleUpIfNeeded", true);
+            crop.putExtra("return-data", true);
+            startActivityForResult(crop, 1);
+        } catch (ActivityNotFoundException ex) {
 
         }
 

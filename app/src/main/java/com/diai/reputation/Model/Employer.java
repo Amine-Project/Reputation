@@ -1,9 +1,12 @@
 package com.diai.reputation.Model;
 
+import android.provider.Telephony;
+
 public class Employer {
     private String firstName;
     private String lastName;
     private String service;
+
 
     public Employer() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -44,5 +47,6 @@ public class Employer {
     public void setService(String service) {
         this.service = service;
     }
+
 }
 

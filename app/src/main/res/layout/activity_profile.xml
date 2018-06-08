@@ -12,9 +12,12 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:textColor="#FFF"
+        android:textSize="20dp"
+        android:fontFamily="Roboto">
 
-        <TextView
+      <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Profile"
@@ -85,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:text="TextView"
+                android:text="AE-Tech"
                 android:textColor="@color/text_color_icon"
                 android:textStyle="bold" />
 
@@ -95,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="TextView"
+                android:text="IT"
                 android:textColor="@color/text_color_icon"
                 android:textStyle="bold" />
 
@@ -103,7 +106,7 @@
                 android:id="@+id/tvService"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="IT"
                 android:textColor="@color/text_color_icon"
                 android:textStyle="bold" />
 
@@ -279,6 +282,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:isIndicator="true"
+                android:rating="4"
                 />
 
             <TextView
@@ -286,7 +290,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="4.1"
+                android:text="4"
                 android:textSize="26sp" />
 
         </LinearLayout>

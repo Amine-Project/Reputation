@@ -7,8 +7,10 @@ public class Rating {
     private float punctuality;
     private float sociability;
     private float respect;
-
     private float avg;
+    private int nb;
+
+
 
     public Rating(float seriousness, float loyalty, float punctuality, float sociability, float respect,float  avg) {
         this.seriousness = seriousness;
@@ -17,6 +19,16 @@ public class Rating {
         this.sociability = sociability;
         this.respect = respect;
         this.avg=avg;
+
+    }
+
+    public Rating(Rating rating) {
+        this.seriousness = rating.getSeriousness();
+        this.loyalty = rating.getLoyalty();
+        this.punctuality = rating.getPunctuality();
+        this.sociability = rating.getSociability();
+        this.respect = rating.getRespect();
+        this.avg=rating.getAvg();
     }
 
     public float getSeriousness() {
@@ -65,5 +77,13 @@ public class Rating {
 
     public void setAvg(float avg) {
         this.avg = avg;
+    }
+
+    public int getNb() {
+        return nb;
+    }
+
+    public void setNb(int nb) {
+        this.nb = nb;
     }
 }

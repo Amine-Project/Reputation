@@ -102,7 +102,7 @@ public class Worker extends Fragment {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(currentFirebaseUser.getUid())){
+                if (dataSnapshot.hasChild(currentFirebaseUser.getUid())) {
                     Intent intent = new Intent(getContext(), Contact_list.class);
                     startActivity(intent);
                     onDestroy();
@@ -129,14 +129,14 @@ public class Worker extends Fragment {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        fname = (EditText)getView().findViewById(R.id.fname);
-        lname = (EditText)getView().findViewById(R.id.lname);
-        service = (EditText)getView().findViewById(R.id.service);
+        fname = (EditText) getView().findViewById(R.id.fname);
+        lname = (EditText) getView().findViewById(R.id.lname);
+        service = (EditText) getView().findViewById(R.id.service);
 
-        workerImage=(ImageView)getView().findViewById(R.id.workerImage);
+        workerImage = (ImageView) getView().findViewById(R.id.workerImage);
 
-        Bitmap bit= BitmapFactory.decodeResource(getResources(),R.drawable.images);
-        RoundedBitmapDrawable round= RoundedBitmapDrawableFactory.create(getResources(),bit);
+        Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bit);
         round.setCircular(true);
         workerImage.setImageDrawable(round);
 
@@ -151,32 +151,33 @@ public class Worker extends Fragment {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ((!fname.getText().toString().isEmpty()) && (!lname.getText().toString().isEmpty())&&(!service.getText().toString().isEmpty())) {
+                if ((!fname.getText().toString().isEmpty()) && (!lname.getText().toString().isEmpty()) && (!service.getText().toString().isEmpty())) {
                     mDatabase = FirebaseDatabase.getInstance().getReference();
                     currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    Employer employer = new Employer(fname.getText().toString(), lname.getText().toString(), service.getText().toString());
+                    Employer employer = new Employer(fname.getText().toString(), lname.getText().toString(), service.getText().toString());//,new Rating(0,0,0,0,0,0));
                     String userId = currentFirebaseUser.getUid();
                     mDatabase.child("workers").child(userId).setValue(employer);
                     //mDatabase.child("workers").child(userId).child("rating").setValue(new Rating(0,0,0,0,0,0));
                     //Store the image in Firebase Storage
                     String path = "images/" + userId;
                     StorageReference userImgRef = mStorageRef.child(path);
-                    userImgRef.putFile(imageUri)
-                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // Get a URL to the uploaded content
-                                    //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    // ...
-                                }
-                            });
+                    if (imageUri != null)
+                        userImgRef.putFile(imageUri)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // Get a URL to the uploaded content
+                                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                        // ...
+                                    }
+                                });
 
 
                     Intent intent = new Intent(getContext(), Contact_list.class);
@@ -195,7 +196,7 @@ public class Worker extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == 2) {
                 imageUri = data.getData();
@@ -211,22 +212,20 @@ public class Worker extends Fragment {
     }
 
     private void CropImage() {
-        try{
+        try {
             crop = new Intent("com.android.camera.action.CROP");
-            crop.setDataAndType(imageUri,"image/*");
+            crop.setDataAndType(imageUri, "image/*");
 
 
-            crop.putExtra("crop","true");
-            crop.putExtra("outputX",180);
-            crop.putExtra("outputY",180);
-            crop.putExtra("aspectX",4);
-            crop.putExtra("aspectY",4);
-            crop.putExtra("scaleUpIfNeeded",true);
-            crop.putExtra("return-data",true);
-            startActivityForResult(crop,1);
-        }
-        catch (ActivityNotFoundException ex)
-        {
+            crop.putExtra("crop", "true");
+            crop.putExtra("outputX", 180);
+            crop.putExtra("outputY", 180);
+            crop.putExtra("aspectX", 4);
+            crop.putExtra("aspectY", 4);
+            crop.putExtra("scaleUpIfNeeded", true);
+            crop.putExtra("return-data", true);
+            startActivityForResult(crop, 1);
+        } catch (ActivityNotFoundException ex) {
 
         }
 

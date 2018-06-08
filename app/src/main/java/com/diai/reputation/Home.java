@@ -14,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +40,9 @@ public class Home extends AppCompatActivity {
     private TextView mTextMessage;
     ArrayList<Home.Item> itemList = new ArrayList<>();
     ArrayList<String> ids = new ArrayList<>();
-    ArrayList<String> parent = new ArrayList<>();
+    ArrayList<String> parente = new ArrayList<>();
     ListView lv;
+    Context context = this;
 
     //StorageReference gsReference = FirebaseStorage.getInstance().getReference().child("images/C4BYE5H0pzM0tm67giCGSFopVP62.jpg");
 
@@ -53,7 +55,7 @@ public class Home extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         lv = (ListView) findViewById(R.id.mainList);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("workers");
 
         final DatabaseReference finalMyRef = myRef;
@@ -64,17 +66,26 @@ public class Home extends AppCompatActivity {
                 // whenever data at this location is updated.
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Employer employer = new Employer(ds.getValue(Employer.class));
-                    itemList.add(new Item(employer.getFirstName(), employer.getLastName(), employer.getService()));
-
-                    ids.add(ds.getKey().toString());
-                   /* if(ds.hasChild("rating")){
-                        Rating rating=ds.child("rating").getValue(Rating.class);
-
+//                    Rating rating=new Rating(ds.child("rating").getValue(Rating.class));
+                    Float fl = 0.f;
+                    if (!ds.hasChild("rating")) {
+                        finalMyRef.child(ds.getKey().toString()).child("rating").setValue(new Rating(0, 0, 0, 0, 0, 0));
+                        //rating=new Rating(0,0,0,0,0,0);
+                    } else {
+                        fl = ds.child("rating").child("avg").getValue(Float.class);
                     }
-                    else {
-                        finalMyRef.child("rating").setValue(new Rating(0,0,0,0,0,0));
-                        Rating rating=ds.child("rating").getValue(Rating.class);
-                    }*/
+
+                    //itemList.add(new Item(employer.getFirstName(), employer.getLastName(), employer.getService(),fl));
+                    //ids.add(ds.getKey().toString());
+                    Item item = new Item(employer.getFirstName(), employer.getLastName(), employer.getService(), fl);
+                    if ((ids.contains(ds.getKey().toString()))) {
+                        itemList.set(ids.indexOf(ds.getKey().toString()), item);
+                    } else {
+                        itemList.add(item);
+                        ids.add(ds.getKey().toString());
+                        parente.add("workers");
+                    }
+
                 }
             }
 
@@ -84,8 +95,10 @@ public class Home extends AppCompatActivity {
             }
         });
 
+
         myRef = database.getReference("companies");
 
+        final DatabaseReference finalMyRef1 = myRef;
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -93,9 +106,23 @@ public class Home extends AppCompatActivity {
                 // whenever data at this location is updated.
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Entreprise entreprise = new Entreprise(ds.getValue(Entreprise.class));
-                    itemList.add(new Item(entreprise.getCompanyName(), null, entreprise.getService()));
-                    ids.add(ds.getKey().toString());
-                    parent.add("companies");
+                    //=new Rating(0,0,0,0,0,0);
+                    Float fl=0.f;
+                    if (!ds.hasChild("rating")) {
+                        finalMyRef1.child(ds.getKey().toString()).child("rating").setValue(new Rating(0, 0, 0, 0, 0, 0));
+                        //rating=new Rating(0,0,0,0,0,0);
+                    } else
+                        fl = ds.child("rating").child("avg").getValue(Float.class);
+                    //Toast.makeText(context,fl.toString(),Toast.LENGTH_SHORT);
+                    Item item = new Item(entreprise.getCompanyName(), null, entreprise.getService(), fl);
+                    if (ids.contains(ds.getKey().toString())) {
+                        itemList.set(ids.indexOf(ds.getKey().toString()), item);
+                    } else {
+                        itemList.add(item);
+                        ids.add(ds.getKey().toString());
+                        parente.add("companies");
+                    }
+
                 }
                 lv.setAdapter(new MyListAdapter());
                 //lv.setOnClickListener(new On);
@@ -106,7 +133,6 @@ public class Home extends AppCompatActivity {
 
             }
         });
-
 
 
 
@@ -137,14 +163,11 @@ public class Home extends AppCompatActivity {
                             }
                         }
                     }
-
                 }
                 String value = dataSnapshot.getValue(String.class);
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
-
             }
         });*/
 /*
@@ -157,53 +180,6 @@ public class Home extends AppCompatActivity {
         }
         */
     }
-
-
-    public ArrayList<Home.Item> load() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Employer employer = new Employer(ds.getValue(Employer.class));
-                    itemList.add(new Item(employer.getFirstName(), employer.getLastName(), employer.getService()));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-        return itemList;
-    }
-/*
-
-    public ArrayList<Home.Item> data(){
-        Firebase ref = new Firebase("https://reputation-8bc29.firebaseio.com/workers"); //Root URL
-
-
-        ref.addValueEventListener(new com.firebase.client.ValueEventListener() {
-            @Override
-            public void onDataChange(com.firebase.client.DataSnapshot dataSnapshot) {
-                for (com.firebase.client.DataSnapshot child : dataSnapshot.getChildren()) {
-                        itemList.add(new Item(child.getValue(Employer.class).getFirstName(),child.getValue(Employer.class).getLastName(),child.getValue(Employer.class).getService()));
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        return itemList;
-    }
-*/
 
 
     private class MyListAdapter extends BaseAdapter {
@@ -232,35 +208,38 @@ public class Home extends AppCompatActivity {
 
 
         @Override
-        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
 
 
             LayoutInflater inflater = getLayoutInflater();
             final View row = inflater.inflate(R.layout.liste_item, parent, false);
-            //ImageView image=(ImageView)findViewById(R.id.profile_image);
             final TextView name = (TextView) row.findViewById(R.id.name);
             final TextView sName = (TextView) row.findViewById(R.id.sName);
             final TextView service = (TextView) row.findViewById(R.id.service);
             Button rate = (Button) row.findViewById(R.id.gRate);
             final ImageView imageView = (ImageView) row.findViewById(R.id.pro_image);
+            RatingBar ratingBar = (RatingBar) row.findViewById(R.id.ratingBar);
 
 
-            name.setText(itemList.get(position).name.toString());
+            name.setText(itemList.get(position).name);
             if (itemList.get(position).sName != null) {
                 sName.setText(itemList.get(position).sName);
             } else
                 sName.setVisibility(View.GONE);
             service.setText(itemList.get(position).service);
 
+            ratingBar.setRating(itemList.get(position).rateScore);
+
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
 
-            storageRef.child("images/"+ids.get(position)).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            storageRef.child("images/" + ids.get(position)).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Glide.with(row.getContext())
-                            .load(uri)
-                            .into(imageView);
+                    if (uri != null)
+                        Glide.with(row.getContext())
+                                .load(uri)
+                                .into(imageView);
                 }
             });
 /*
@@ -273,7 +252,12 @@ public class Home extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), Profile.class);
                     intent.putExtra("id", ids.get(position).toString());
-                    intent.putExtra("parent", ids.get(position).toString());
+                    intent.putExtra("name", itemList.get(position).name.toString());
+                    if (itemList.get(position).sName != null)
+                        intent.putExtra("sName", itemList.get(position).sName);
+                    intent.putExtra("parent", parente.get(position).toString());
+                    intent.putExtra("service", itemList.get(position).service);
+                    intent.putExtra("rate", itemList.get(position).rateScore);
                     startActivity(intent);
                 }
             });
@@ -282,7 +266,13 @@ public class Home extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), Contact.class);
-                    //intent.putExtra("id",ids.get(position).toString());
+                    intent.putExtra("id", ids.get(position).toString());
+                    intent.putExtra("name", itemList.get(position).name.toString());
+                    if (itemList.get(position).sName != null)
+                        intent.putExtra("sName", itemList.get(position).sName);
+                    intent.putExtra("parent", ids.get(position).toString());
+                    intent.putExtra("service", itemList.get(position).service);
+                    intent.putExtra("rate", itemList.get(position).rateScore);
                     startActivity(intent);
                 }
             });
@@ -299,10 +289,11 @@ public class Home extends AppCompatActivity {
         private String service;
         private float rateScore;
 
-        public Item(String name, String sName, String service) {
+        public Item(String name, String sName, String service, float rateScore) {
             this.name = name;
             this.sName = sName;
             this.service = service;
+            this.rateScore = rateScore;
         }
 
         public Item(Item item) {
