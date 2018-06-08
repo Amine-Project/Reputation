@@ -271,8 +271,9 @@ public class Home extends AppCompatActivity {
                     if (itemList.get(position).sName != null)
                         intent.putExtra("sName", itemList.get(position).sName);
                     intent.putExtra("parent", ids.get(position).toString());
+                    if (itemList.get(position).service != null)
                     intent.putExtra("service", itemList.get(position).service);
-                    intent.putExtra("rate", itemList.get(position).rateScore);
+                    //intent.putExtra("rate", itemList.get(position).rateScore);
                     startActivity(intent);
                 }
             });

@@ -48,13 +48,13 @@
             android:layout_marginLeft="16dp"
             android:layout_marginBottom="50dp"
             >
+
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/photo"
+                android:id="@+id/profile_image"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/images"
                 android:layout_marginRight="16dp"
-                />
+                android:src="@drawable/images" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                     android:id="@+id/tvFname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Anas"
+                    android:text="TextView"
                     android:textColor="@color/text_color_icon"
                     android:textStyle="bold" />
 
@@ -107,7 +107,7 @@
                     android:id="@+id/tvLname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Elkamali"
+                    android:text="TextView"
                     android:textColor="@color/text_color_icon"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
@@ -117,7 +117,7 @@
                     android:id="@+id/tvService"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Developer"
+                    android:text="TextView"
                     android:textColor="@color/text_color_icon"
                     android:textStyle="bold" />
 
@@ -147,21 +147,21 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/call"/>
+            <Button
+                android:id="@+id/btnCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/call" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="16dp"
-            android:background="@drawable/message"/>
+            <Button
+                android:id="@+id/btnText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/message" />
         </LinearLayout>
     </LinearLayout>
     </LinearLayout>
