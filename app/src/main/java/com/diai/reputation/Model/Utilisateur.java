@@ -7,7 +7,9 @@ public class Utilisateur {
     public Utilisateur() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
-
+    public Utilisateur(Object value) {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
     public Utilisateur(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
