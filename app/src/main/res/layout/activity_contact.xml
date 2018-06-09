@@ -71,7 +71,7 @@
                     android:textColor="@color/text_color_icon" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/contactLastName2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Last Name:"
@@ -148,7 +148,7 @@
             android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/contactCall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -156,7 +156,7 @@
             android:background="@drawable/call"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/contactMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

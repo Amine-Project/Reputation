@@ -69,23 +69,7 @@ public class User extends Fragment {
 
 
     public User() {
-        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(currentFirebaseUser.getUid())){
-                    Intent intent = new Intent(getContext(), Contact_list.class);
-                    startActivity(intent);
-                    onDestroy();
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         // Required empty public constructor
     }
 
@@ -161,7 +145,7 @@ public class User extends Fragment {
                     //Write data into Firebase database
                     if ((!fname.getText().toString().isEmpty()) && (!lname.getText().toString().isEmpty())) {
                         mDatabase = FirebaseDatabase.getInstance().getReference();
-                        //currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         Utilisateur utilisateur = new Utilisateur(fname.getText().toString(), lname.getText().toString());
                         String userId = new String(currentFirebaseUser.getUid());
                         mDatabase.child("users").child(userId).setValue(utilisateur);

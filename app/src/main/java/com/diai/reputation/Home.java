@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,15 +19,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 import com.diai.reputation.Model.Employer;
 import com.diai.reputation.Model.Entreprise;
 import com.diai.reputation.Model.Rating;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import android.support.v7.widget.SearchView;
 
 import java.util.ArrayList;
 
@@ -43,8 +44,6 @@ public class Home extends AppCompatActivity {
     ArrayList<String> parente = new ArrayList<>();
     ListView lv;
     Context context = this;
-
-    //StorageReference gsReference = FirebaseStorage.getInstance().getReference().child("images/C4BYE5H0pzM0tm67giCGSFopVP62.jpg");
 
 
     @Override
@@ -124,7 +123,7 @@ public class Home extends AppCompatActivity {
                     }
 
                 }
-                lv.setAdapter(new MyListAdapter());
+                lv.setAdapter(new MyListAdapter(itemList));
                 //lv.setOnClickListener(new On);
             }
 
@@ -134,71 +133,83 @@ public class Home extends AppCompatActivity {
             }
         });
 
-
-
-
+    }
 /*
-        DatabaseReference data = FirebaseDatabase.getInstance().getReference().child(parent);
-        DatabaseReference myRef = data.child(parent);
-        myRef.addValueEventListener(new ValueEventListener() {
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search,menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search_item);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.getKey().equals(id)) {
-                        if (parent == "workers") {
-                            if(ds.hasChild("rating")){
-                                Rating rating=ds.child("rating").getValue(Rating.class);
-                            }
-                            else {
-                                mDatabase.child(parent).child(id).child("rating").setValue(new Rating(0,0,0,0,0,0));
-                                Rating rating=ds.child("rating").getValue(Rating.class);
-                            }
-                        } else if (parent == "companies") {
-                            if(ds.hasChild("rating")){
-                                Rating rating=ds.child("rating").getValue(Rating.class);
-                            }
-                            else {
-                                mDatabase.child(parent).child(id).child("rating").setValue(new Rating(0,0,0,0,0,0));
-                                Rating rating=ds.child("rating").getValue(Rating.class);
-                            }
-                        }
+            public boolean onQueryTextSubmit(String query) {
+                ArrayList<Item> list=new ArrayList<>();
+
+                for(Item temp: itemList){
+                    if(temp.getService().toLowerCase().contains(query.toLowerCase())){
+                        list.add(temp);
                     }
                 }
-                String value = dataSnapshot.getValue(String.class);
+                lv.setAdapter(new MyListAdapter(list));
+
+                return true;
             }
+
             @Override
-            public void onCancelled(DatabaseError error) {
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
-        });*/
-/*
-        if(itemList.size()>0)
-        {
-            lv.setAdapter(new MyListAdapter(this));
-        }else
-        {
-            Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show();
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+*/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 1, Menu.NONE, "Profil");
+        menu.add(0, 2, Menu.NONE, "Share");
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch(item.getItemId()){
+            case 1:
+                 intent=new Intent(this,User.class);
+                startActivity(intent);
+                return true;
+            case 2:
+                 intent=new Intent(this,Contact_list.class);
+                 intent.putExtra("flag",true);
+                startActivity(intent);
+                return true;
         }
-        */
+        return super.onOptionsItemSelected(item);
     }
 
 
     private class MyListAdapter extends BaseAdapter {
 
         //Context context;
-        LayoutInflater layoutInflater;
+        ArrayList<Item> itemArrayList=new ArrayList<>();
 
-        public MyListAdapter() {
+        public MyListAdapter(ArrayList<Item> arrayList) {
             //this.context = context;
+            this.itemArrayList = arrayList;
         }
 
         @Override
         public int getCount() {
-            return itemList.size();
+            return itemArrayList.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return itemList.get(i);
+            return itemArrayList.get(i);
         }
 
         @Override
@@ -221,14 +232,14 @@ public class Home extends AppCompatActivity {
             RatingBar ratingBar = (RatingBar) row.findViewById(R.id.ratingBar);
 
 
-            name.setText(itemList.get(position).name);
-            if (itemList.get(position).sName != null) {
-                sName.setText(itemList.get(position).sName);
+            name.setText(itemArrayList.get(position).name);
+            if (itemArrayList.get(position).sName != null) {
+                sName.setText(itemArrayList.get(position).sName);
             } else
                 sName.setVisibility(View.GONE);
-            service.setText(itemList.get(position).service);
+            service.setText(itemArrayList.get(position).service);
 
-            ratingBar.setRating(itemList.get(position).rateScore);
+            ratingBar.setRating(itemArrayList.get(position).rateScore);
 
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
@@ -252,12 +263,12 @@ public class Home extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), Profile.class);
                     intent.putExtra("id", ids.get(position).toString());
-                    intent.putExtra("name", itemList.get(position).name.toString());
-                    if (itemList.get(position).sName != null)
-                        intent.putExtra("sName", itemList.get(position).sName);
+                    intent.putExtra("name", itemArrayList.get(position).name.toString());
+                    if (itemArrayList.get(position).sName != null)
+                        intent.putExtra("sName", itemArrayList.get(position).sName);
                     intent.putExtra("parent", parente.get(position).toString());
-                    intent.putExtra("service", itemList.get(position).service);
-                    intent.putExtra("rate", itemList.get(position).rateScore);
+                    intent.putExtra("service", itemArrayList.get(position).service);
+                    intent.putExtra("rate", itemArrayList.get(position).rateScore);
                     startActivity(intent);
                 }
             });
@@ -267,12 +278,10 @@ public class Home extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), Contact.class);
                     intent.putExtra("id", ids.get(position).toString());
-                    intent.putExtra("name", itemList.get(position).name.toString());
-                    if (itemList.get(position).sName != null)
-                        intent.putExtra("sName", itemList.get(position).sName);
-                    intent.putExtra("parent", ids.get(position).toString());
-                    intent.putExtra("service", itemList.get(position).service);
-                    intent.putExtra("rate", itemList.get(position).rateScore);
+                    intent.putExtra("name", itemArrayList.get(position).name.toString());
+                    if (itemArrayList.get(position).sName != null)
+                        intent.putExtra("sName", itemArrayList.get(position).sName);
+                    intent.putExtra("service", itemArrayList.get(position).service);
                     startActivity(intent);
                 }
             });

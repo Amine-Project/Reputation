@@ -135,7 +135,7 @@ public class Contact_list extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if ((rateNumber <= 0) && (shareNumber <= 0)) {
+        if ((rateNumber <= 0) && (shareNumber <= 0)&&(getIntent().getExtras().getBoolean("flag")!=true)) {
             Intent intent = new Intent(this, Home.class);
             startActivity(intent);
             onDestroy();
