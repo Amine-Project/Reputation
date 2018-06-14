@@ -99,7 +99,7 @@ public class Contact_list extends AppCompatActivity {
         text0 = (TextView) findViewById(R.id.rateNb);
 
         if ((rateNumber <= 0) && (shareNumber <= 0)) {
-            Intent intent = new Intent(this, Home.class);
+            Intent intent = new Intent(this, MyAccount.class);
             startActivity(intent);
             onDestroy();
         }
@@ -112,10 +112,10 @@ public class Contact_list extends AppCompatActivity {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Home.class);
+                Intent intent = new Intent(v.getContext(), MyAccount.class);
                 startActivity(intent);
                 finish();
-                onDestroy();
+                //onDestroy();
             }
         });
     }
@@ -128,17 +128,17 @@ public class Contact_list extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        save(shareNumber, rateNumber);
         super.onPause();
+        save(shareNumber, rateNumber);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         if ((rateNumber <= 0) && (shareNumber <= 0)&&(getIntent().getExtras().getBoolean("flag")!=true)) {
-            Intent intent = new Intent(this, Home.class);
+            Intent intent = new Intent(this, MyAccount.class);
             startActivity(intent);
-            onDestroy();
+            finish();
         }
     }
 
@@ -152,7 +152,6 @@ public class Contact_list extends AppCompatActivity {
     public void onBackPressed() {
         save(shareNumber, rateNumber);
         finish();
-        onDestroy();
     }
 
 

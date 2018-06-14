@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -22,8 +21,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 
 public class PhoneLogin extends AppCompatActivity {
@@ -75,14 +72,12 @@ public class PhoneLogin extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                 if (currentFirebaseUser!=null){
-                    //User is signed in
                     startActivity(new Intent(PhoneLogin.this,Registration.class));
                     PhoneLogin.this.finish();
                     Toast.makeText(PhoneLogin.this,"Successfully signed in with"+currentFirebaseUser.getPhoneNumber(),Toast.LENGTH_SHORT).show();//for Testing
 
                 }else {
-                    // No user is signed in
-                    Toast.makeText(PhoneLogin.this,"No user is signed in",Toast.LENGTH_SHORT).show();//for testing
+
 
                 }
 
@@ -154,9 +149,6 @@ public class PhoneLogin extends AppCompatActivity {
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, e2.getText().toString());
                 // [END verify_with_code]
                 signInWithPhoneAuthCredential(credential);
-
-
-                //myRef.setValue(FirebaseAuth.getInstance().getCurrentUser(),e1.getText().toString());
             }
         });
 
@@ -171,10 +163,6 @@ public class PhoneLogin extends AppCompatActivity {
                         if (task.isSuccessful()) {
                            // Log.d(TAG, "signInWithCredential:success");
                             Toast.makeText(PhoneLogin.this,"Verification Done",Toast.LENGTH_SHORT).show();
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference myRef = database.getReference();
-
-                            myRef.child("phoneNumbers").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(e1.getText().toString());
                             startActivity(new Intent(PhoneLogin.this,Registration.class));
                             PhoneLogin.this.finish();
                             // ...

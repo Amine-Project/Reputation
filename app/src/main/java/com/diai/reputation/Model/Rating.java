@@ -3,33 +3,42 @@ package com.diai.reputation.Model;
 public class Rating {
 
     private float seriousness;
-    private float loyalty;
     private float punctuality;
     private float sociability;
     private float respect;
+    private float work_quality;
+
     private float avg;
     private int nb;
 
+    public Rating() {
 
+    }
 
-    public Rating(float seriousness, float loyalty, float punctuality, float sociability, float respect,float  avg) {
+    public Rating(float seriousness, float punctuality, float sociability, float respect, float work_quality, float  avg) {
         this.seriousness = seriousness;
-        this.loyalty = loyalty;
         this.punctuality = punctuality;
         this.sociability = sociability;
         this.respect = respect;
+        this.work_quality = work_quality;
+
         this.avg=avg;
 
     }
 
     public Rating(Rating rating) {
         this.seriousness = rating.getSeriousness();
-        this.loyalty = rating.getLoyalty();
         this.punctuality = rating.getPunctuality();
         this.sociability = rating.getSociability();
         this.respect = rating.getRespect();
+        this.work_quality = rating.getWork_quality();
+
         this.avg=rating.getAvg();
     }
+
+    public float getWork_quality() { return work_quality; }
+
+    public void setWork_quality(float work_quality) { this.work_quality = work_quality; }
 
     public float getSeriousness() {
         return seriousness;
@@ -37,14 +46,6 @@ public class Rating {
 
     public void setSeriousness(float seriousness) {
         this.seriousness = seriousness;
-    }
-
-    public float getLoyalty() {
-        return loyalty;
-    }
-
-    public void setLoyalty(float loyalty) {
-        this.loyalty = loyalty;
     }
 
     public float getPunctuality() {

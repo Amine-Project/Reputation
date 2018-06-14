@@ -23,20 +23,58 @@
 
     </android.support.v7.widget.Toolbar>
 
-
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    </android.support.design.widget.TabLayout>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/pager">
+            <ImageView
+                android:id="@+id/userImage"
+                android:layout_width="210dp"
+                android:layout_height="210dp" />
 
-    </android.support.v4.view.ViewPager>
+            <Button
+                android:id="@+id/upload"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|right"
+                android:background="@drawable/upload"
+                />
+
+
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/fullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Full Name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/job"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Job"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/next" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

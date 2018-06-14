@@ -1,20 +1,24 @@
 package com.diai.reputation.Model;
 
 public class Utilisateur {
-    public String firstName;
-    public String lastName;
+    private String firstName;
+    private String job;
+    private String phoneNumer;
 
     public Utilisateur() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
-    public Utilisateur(Object value) {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
-    }
-    public Utilisateur(String firstName, String lastName) {
+
+    public Utilisateur(String firstName, String job, String phoneNumer) {
         this.firstName = firstName;
-        this.lastName = lastName;
+        this.job = job;
+        this.phoneNumer = phoneNumer;
     }
-    //Getters & Setters
+    public Utilisateur(Utilisateur utilisateur) {
+        this.firstName = utilisateur.firstName;
+        this.job = utilisateur.job;
+        this.phoneNumer = utilisateur.phoneNumer;
+    }
     public String getFirstName() {
         return firstName;
     }
@@ -23,11 +27,15 @@ public class Utilisateur {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getJob() {
+        return job;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setJob(String job) {
+        this.job = job;
     }
+
+    public String getPhoneNumer() { return phoneNumer; }
+
+    public void setPhoneNumer(String phoneNumer) { this.phoneNumer = phoneNumer; }
 }

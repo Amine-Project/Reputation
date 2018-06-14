@@ -22,7 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#1E2C51"
-        android:text="Know what others think about you"
+        android:text="Know with who you work"
         android:textSize="18sp"
         app:fontFamily="@font/handlee" />
+    <!--Know with who you work-->
+    <!--Avoid alot of prolems by knowing people you want to work with before you start-->
 </LinearLayout>

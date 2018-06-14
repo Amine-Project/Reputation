@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +19,7 @@
       <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
+            android:text="Rating"
             android:textColor="#FFF"
             android:textSize="20dp"
             android:fontFamily="Roboto"/>
@@ -54,7 +53,7 @@
                 android:id="@+id/textView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="First Name:"
+                android:text="@string/fullname"
                 android:textColor="@color/text_color_icon" />
 
             <TextView
@@ -63,15 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Last Name:"
-                android:textColor="@color/text_color_icon" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:text="Service:"
+                android:text="@string/job"
                 android:textColor="@color/text_color_icon" />
 
         </LinearLayout>
@@ -84,29 +75,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvFname"
+                android:id="@+id/fullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:text="AE-Tech"
                 android:textColor="@color/text_color_icon"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvLname"
+                android:id="@+id/job"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="IT"
-                android:textColor="@color/text_color_icon"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvService"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="IT"
                 android:textColor="@color/text_color_icon"
                 android:textStyle="bold" />
 
@@ -177,7 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="Loyal"
+                    android:text="Punctual"
                     android:textColor="#000"
                     android:textSize="18sp" />
 
@@ -199,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="Punctual"
+                    android:text="Sociable"
                     android:textColor="#000"
                     android:textSize="18sp" />
 
@@ -221,7 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="Sociable"
+                    android:text="Respectful"
                     android:textColor="#000"
                     android:textSize="18sp" />
 
@@ -243,7 +223,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="Respectful"
+                    android:text="Work Quality"
                     android:textColor="#000"
                     android:textSize="18sp"
                     android:layout_marginRight="16dp"/>

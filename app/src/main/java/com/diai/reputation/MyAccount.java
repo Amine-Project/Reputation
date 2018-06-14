@@ -1,7 +1,8 @@
 package com.diai.reputation;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,38 +14,37 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.diai.reputation.Model.Employer;
+import com.bumptech.glide.Glide;
 import com.diai.reputation.Model.Utilisateur;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class MyAccount extends AppCompatActivity {
 
     private FirebaseUser currentUser;
     private DatabaseReference mDatabase;
+    private StorageReference mStorageRef;
 
     private LinearLayout fields;
     private ImageView pro_image;
-    private TextView fname;
-    private TextView lname;
-    private TextView service;
-    private TextView phoneN;
+    private TextView fullNameTv;
+    private TextView jobTv;
+    private TextView phoneNumberTv;
     private Button edit;
     private RatingBar note;
 
     private LinearLayout editFields;
-    private EditText etfname;
-    private EditText etlname;
-    private EditText etservice;
-    private EditText etphoneN;
+    private EditText etFullName;
+    private EditText etJob;
+    private EditText etphoneNumber;
     private Button btnSubmit;
 
 
@@ -53,39 +53,53 @@ public class MyAccount extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
 
+        final Context context = this;
+
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         final String userId = currentUser.getUid();
 
 
         fields = (LinearLayout)findViewById(R.id.linearLayout);
         pro_image = (ImageView)findViewById(R.id.pro_image);
-        fname = (TextView)findViewById(R.id.textView);
-        lname = (TextView)findViewById(R.id.textView1);
-        service = (TextView)findViewById(R.id.textView2);
-        phoneN = (TextView)findViewById(R.id.textView3);
+        fullNameTv = (TextView)findViewById(R.id.fullNameTv);
+        jobTv = (TextView)findViewById(R.id.jobTv);
+        phoneNumberTv = (TextView)findViewById(R.id.phoneNumerTv);
         edit = (Button)findViewById(R.id.edit);
         note = (RatingBar)findViewById(R.id.note);
         note.setEnabled(false);
 
         editFields = (LinearLayout)findViewById(R.id.editFields);
-        etfname = (EditText)findViewById(R.id.fname);
-        etlname = (EditText)findViewById(R.id.lname);
-        etservice = (EditText)findViewById(R.id.service);
-        etphoneN = (EditText)findViewById(R.id.phone);
+        etFullName = (EditText)findViewById(R.id.fullNameEt);
+        etJob = (EditText)findViewById(R.id.jobEt);
+        etphoneNumber = (EditText)findViewById(R.id.phoneNumerEt);
         btnSubmit = (Button)findViewById(R.id.btnSubmit);
 
+        mStorageRef.child("images/" + userId +".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                if (uri != null)
+                    Glide.with(context)
+                            .load(uri)
+                            .into(pro_image);
+            }
+        });
+
         //get data from db
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference usersRef = mDatabase.child("users").getRef();
+        usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if(ds.child(userId).hasChild("firstName")){
-                        Log.d("WTF","ds.vale"+ds.child(userId));
-                        Utilisateur user = new Utilisateur(ds.child(userId).getValue(Utilisateur.class));
-                        fname.setText(user.getFirstName());
-                        lname.setText(user.getLastName());
-                        service.setText("void");
+                    if( ds.getKey().equals(userId) ) {
+                        //Log.d("WTF","ds.getValue:"+ds.getValue());
+
+                        Utilisateur user = new Utilisateur(ds.getValue(Utilisateur.class));
+
+                        fullNameTv.setText(user.getFirstName());
+                        jobTv.setText(user.getJob());
+                        phoneNumberTv.setText(user.getPhoneNumer());
 
                     }
                 }
@@ -95,21 +109,14 @@ public class MyAccount extends AppCompatActivity {
 
             }
         });
-
-
-
-        //fill these fiels
-       //pro_image
-        phoneN.setText(currentUser.getPhoneNumber());//done
         //note.setRating();
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                etfname.setText(fname.getText());
-                etlname.setText(lname.getText());
-                etservice.setText(service.getText());
-                etphoneN.setText(phoneN.getText());
+                etFullName.setText(fullNameTv.getText());
+                etJob.setText(jobTv.getText());
+                etphoneNumber.setText(phoneNumberTv.getText());
                 fields.setVisibility(View.GONE);
                 editFields.setVisibility(View.VISIBLE);
             }
@@ -117,15 +124,13 @@ public class MyAccount extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //kifach an3rf wach worker ola user ola ....(makaynch lo9t ste7)
-                Employer worker = new Employer(etfname.getText().toString(), etlname.getText().toString(), etservice.getText().toString());
+                Utilisateur user = new Utilisateur(etFullName.getText().toString(), etJob.getText().toString(), etphoneNumber.getText().toString());
 
-                mDatabase.child("workers").child(userId).setValue(worker);
+                usersRef.child(userId).setValue(user);
 
-                fname.setText(etfname.getText());
-                lname.setText(etlname.getText());
-                service.setText(etservice.getText());
-                phoneN.setText(etphoneN.getText());
+                fullNameTv.setText(etFullName.getText());
+                jobTv.setText(etJob.getText());
+                phoneNumberTv.setText(etphoneNumber.getText());
 
                 editFields.setVisibility(View.GONE);
                 fields.setVisibility(View.VISIBLE);
