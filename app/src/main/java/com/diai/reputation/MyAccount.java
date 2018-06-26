@@ -117,6 +117,7 @@ public class MyAccount extends AppCompatActivity {
                 etFullName.setText(fullNameTv.getText());
                 etJob.setText(jobTv.getText());
                 etphoneNumber.setText(phoneNumberTv.getText());
+                etphoneNumber.setEnabled(false);
                 fields.setVisibility(View.GONE);
                 editFields.setVisibility(View.VISIBLE);
             }

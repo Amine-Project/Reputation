@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.diai.reputation.Model.Utilisateur;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class Registration extends AppCompatActivity {
+
+    private static final int REQUEST_INVITE = 100;
+    private int numberOfInvites = 5;
+
     private DatabaseReference mDatabase;
     private FirebaseUser currentFirebaseUser;
     private StorageReference mStorageRef;
@@ -43,8 +48,6 @@ public class Registration extends AppCompatActivity {
 
     private EditText fullNameTv;
     private EditText jobTv;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,7 @@ public class Registration extends AppCompatActivity {
                 if ( (!fullNameTv.getText().toString().isEmpty()) && (!jobTv.getText().toString().isEmpty()) && (imageUri!=null)) {
                     Utilisateur utilisateur = new Utilisateur(fullNameTv.getText().toString(), jobTv.getText().toString(), currentFirebaseUser.getPhoneNumber() );
                     mDatabase.child("users").child(userId).setValue(utilisateur);
+                    mDatabase.child("phoneNumbers").child(userId).setValue(currentFirebaseUser.getPhoneNumber());
                     //Store the image in Firebase Storage
                     String path = "images/" + userId + ".jpg";
                     StorageReference userImgRef = mStorageRef.child(path);
@@ -105,9 +109,16 @@ public class Registration extends AppCompatActivity {
                     } catch (Exception e) {
 
                     }
-                    Intent intent = new Intent(Registration.this, MyAccount.class);
+                    Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                            .setMessage(getString(R.string.invitation_message))
+                            //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                            //.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                            //.setCallToActionText(getString(R.string.invitation_cta))
+                            .build();
+                    startActivityForResult(intent, REQUEST_INVITE);
+                    /*Intent intent = new Intent(Registration.this, MyAccount.class);
                     startActivity(intent);
-                    finish();
+                    finish();*/
                 } else
                     Toast.makeText(Registration.this, "Fill all the filled", Toast.LENGTH_SHORT).show();
             }
@@ -138,7 +149,7 @@ public class Registration extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(gallery, "Select Image from Gallery"), 2);
         }
 
-        @Override
+ /*       @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             //super.onActivityResult(requestCode, resultCode, data);
             if(resultCode == RESULT_OK){
@@ -158,6 +169,56 @@ public class Registration extends AppCompatActivity {
                     userImage.setImageDrawable(round);
                 }
             }
+        }*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("WTF", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d("WTF", "onActivityResult: sent invitation " + id);
+                }
+                if (ids.length < numberOfInvites){//
+                    Toast.makeText(Registration.this,"Sorry! you need to invite "+(numberOfInvites - ids.length)+" more friends to continue",Toast.LENGTH_SHORT).show();
+                    numberOfInvites-=ids.length;
+                    Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                            .setMessage(getString(R.string.invitation_message))
+                            .build();
+                    startActivityForResult(intent, REQUEST_INVITE);
+
+                }else {
+
+                    Toast.makeText(Registration.this,"Thanks! Now you can continue",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Registration.this,Contact_list.class));
+
+                }
+
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+                Toast.makeText(Registration.this,"invitation failed and not sent",Toast.LENGTH_SHORT).show();
+            }
+        }else if (requestCode == 2 && resultCode == RESULT_OK) {
+            imageUri = data.getData();
+            CropImage();
+        }else if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            Bitmap bitmap = bundle.getParcelable("data");
+            RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            round.setCircular(true);
+            userImage.setImageDrawable(round);
+        }else{
+            Bitmap bit = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable round = RoundedBitmapDrawableFactory.create(getResources(), bit);
+            round.setCircular(true);
+            userImage.setImageDrawable(round);
         }
+
+
+    }
 
 }

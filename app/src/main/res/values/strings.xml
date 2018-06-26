@@ -15,6 +15,8 @@
     <string name="registration">Registration</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="invitation_title">Invite Friends</string>
-    <string name="invitation_message">Check out ReputationApp.I use it to see what others think about me</string>
+    <string name="invitation_message">Check out Reputation.I use it to get ideas about people I want to work with before I start</string>
     <string name="phoneNumer">phone Numer</string>
+    <string name="invitation_deep_link">https://play.google.com/store/apps/details?id=com.diai.reputation</string>
+    <string name="invitation_custom_image">img</string>
 </resources>

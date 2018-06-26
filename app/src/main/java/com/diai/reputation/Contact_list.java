@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,11 +50,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class Contact_list extends AppCompatActivity {
+
+    private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
+
     ListView lv;
-    TextView text;
-    TextView text0;
     int shareNumber;
     int rateNumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +71,13 @@ public class Contact_list extends AppCompatActivity {
 
             // Permission is not granted
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_CONTACTS)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_CONTACTS},
-                        1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},1);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
@@ -91,12 +92,10 @@ public class Contact_list extends AppCompatActivity {
         MyListAdapter listAdpter = new MyListAdapter(this);
 
 
-        loadValue(shareNumber, rateNumber);
+        loadValue();
 
 
         lv.setAdapter(listAdpter);
-        text = (TextView) findViewById(R.id.shareNb);
-        text0 = (TextView) findViewById(R.id.rateNb);
 
         if ((rateNumber <= 0) && (shareNumber <= 0)) {
             Intent intent = new Intent(this, MyAccount.class);
@@ -104,8 +103,6 @@ public class Contact_list extends AppCompatActivity {
             onDestroy();
         }
 
-        text.setText(Integer.toString(shareNumber));
-        text0.setText(Integer.toString(rateNumber));
 
 
         Button finish = (Button) findViewById(R.id.finish);
@@ -122,8 +119,8 @@ public class Contact_list extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        save(shareNumber, rateNumber);
         super.onStop();
+        save(shareNumber, rateNumber);
     }
 
     @Override
@@ -135,11 +132,11 @@ public class Contact_list extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if ((rateNumber <= 0) && (shareNumber <= 0)&&(getIntent().getExtras().getBoolean("flag")!=true)) {
+        /*if ((rateNumber <= 0) && (shareNumber <= 0)&&(getIntent().getExtras().getBoolean("flag")!=true)) {
             Intent intent = new Intent(this, MyAccount.class);
             startActivity(intent);
             finish();
-        }
+        }*/
     }
 
     @Override
@@ -160,7 +157,7 @@ public class Contact_list extends AppCompatActivity {
 
         try {
             file = openFileOutput("variable.txt", MODE_PRIVATE);
-            String text = Integer.toString(shareNumber) + ":" + Integer.toString(rateNumber);
+            String text = Integer.toString(a) + ":" + Integer.toString(b);
             file.write(text.getBytes());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -177,7 +174,7 @@ public class Contact_list extends AppCompatActivity {
         }
     }
 
-    public void loadValue(int a, int b) {
+    public void loadValue() {
         FileInputStream file = null;
 
         try {
@@ -226,26 +223,26 @@ public class Contact_list extends AppCompatActivity {
                 contactList.add(new Contact(name, phone));
             }
             cursor.close();
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("phoneNumbers");
+
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            mStorageRef = FirebaseStorage.getInstance().getReference();
+            DatabaseReference phoneNumbersRef = mDatabase.child("phoneNumbers");
 
 
-            myRef.addValueEventListener(new ValueEventListener() {
+            phoneNumbersRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     //String id = new String();
-                    for (int i = 0; i < contactList.size(); i++)
+                    for (int i = 0; i < contactList.size(); i++){
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             if (contactList.get(i).phoneNumber.equals(ds.getValue(String.class))) {
                                 contactList.get(i).found = true;
                                 //id = ds.getValue(String.class);
                                 count++;
 
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
-                                StorageReference storageRef = storage.getReference();
 
                                 final int finalI = i;
-                                storageRef.child("images/" + ds.getKey().toString()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                mStorageRef.child("images/" + ds.getKey().toString()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         contactList.get(finalI).image = uri;
@@ -259,8 +256,12 @@ public class Contact_list extends AppCompatActivity {
                                 break;
                             }
                         }
+                        if(contactList.get(i).found == false)
+                            contactList.remove(i);
+                    }
 
-                    Boolean first = getSharedPreferences("PREF", MODE_PRIVATE).getBoolean("isFirstRun", true);
+
+                        Boolean first = getSharedPreferences("PREF", MODE_PRIVATE).getBoolean("isFirstRun", true);
 
                     if (first) {
                         if (count > 2) {
@@ -268,7 +269,7 @@ public class Contact_list extends AppCompatActivity {
                         } else
                             rateNumber = count;
 
-                        text0.setText(Integer.toString(rateNumber));
+                        //text0.setText(Integer.toString(rateNumber));
                         getSharedPreferences("PREF", MODE_PRIVATE).edit().putBoolean("isFirstRun", false).commit();
                     }
                 }
@@ -337,13 +338,13 @@ public class Contact_list extends AppCompatActivity {
 
                         startActivity(sendIntent);
                         shareNumber = shareNumber - 1;
-                        text.setText(Integer.toString(shareNumber));
+                        //text.setText(Integer.toString(shareNumber));
                     } else {
                         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("sms:" + phoneNumber));
                         intent.putExtra("sms_body", "We invite you to download the Reputation App");
                         startActivity(intent);
                         shareNumber = shareNumber - 1;
-                        text.setText(Integer.toString(shareNumber));
+                        //text.setText(Integer.toString(shareNumber));
                     }
 
                 }
@@ -356,7 +357,7 @@ public class Contact_list extends AppCompatActivity {
                         Intent intent = new Intent(view.getContext(), Profile.class);
                         rateNumber = rateNumber - 1;
                         intent.putExtra("id", phoneNumber.getText().toString());
-                        text0.setText(Integer.toString(rateNumber));
+                        //text0.setText(Integer.toString(rateNumber));
                         startActivity(intent);
                     }
                 });

@@ -135,7 +135,7 @@ public class PhoneLogin extends AppCompatActivity {
                 }else {
                     PhoneAuthProvider.getInstance().verifyPhoneNumber(
                             e1.getText().toString(),
-                            60,
+                            30,
                             java.util.concurrent.TimeUnit.SECONDS,
                             PhoneLogin.this,
                             mCallbacks);
